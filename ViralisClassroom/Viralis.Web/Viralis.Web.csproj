@@ -23,4 +23,8 @@
     <ProjectReference Include="..\Viralis.Data\Viralis.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\" />
+  </ItemGroup>
+
 </Project>

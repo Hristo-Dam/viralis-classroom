@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Constants\" />
     <Folder Include="Seeding\" />
   </ItemGroup>
 

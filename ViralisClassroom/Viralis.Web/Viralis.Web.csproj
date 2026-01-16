@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Viralis.Common\Viralis.Common.csproj" />
     <ProjectReference Include="..\Viralis.Data\Viralis.Data.csproj" />
+    <ProjectReference Include="..\Viralis.Services\Viralis.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

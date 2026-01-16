@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Viralis.Data;
 using Viralis.Data.Models;
+using Viralis.Services.Implementations;
+using Viralis.Services.Interfaces;
 
 namespace Viralis.Web
 {
@@ -37,6 +39,7 @@ namespace Viralis.Web
 
             builder.Services.AddRazorPages();
             builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<IClassroomService, ClassroomService>();
 
             var app = builder.Build();
 

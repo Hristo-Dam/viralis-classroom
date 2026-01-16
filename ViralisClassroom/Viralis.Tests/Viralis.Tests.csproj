@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Viralis.Common\Viralis.Common.csproj" />
+    <ProjectReference Include="..\Viralis.Services\Viralis.Services.csproj" />
+  </ItemGroup>
+
 </Project>

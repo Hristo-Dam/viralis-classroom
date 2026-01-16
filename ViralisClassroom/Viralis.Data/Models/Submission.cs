@@ -15,7 +15,7 @@ namespace Viralis.Data.Models
         public UserAssignment UserAssignment { get; set; } = null!;
 
         public string? TextContent { get; set; }
-        public List<string>? Links { get; set; }      // for external resources
+        public ICollection<string>? Links { get; set; }      // for external resources
 
         public ICollection<SubmissionFile> Files { get; set; }
             = new List<SubmissionFile>();

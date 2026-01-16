@@ -8,7 +8,7 @@
         public Guid StudentId { get; set; }
         public ApplicationUser Student { get; set; } = null!;
 
-        public Guid SubmissionId { get; set; }
+        public Guid? SubmissionId { get; set; }
         public Submission? Submission { get; set; }
     }
 }

@@ -27,14 +27,14 @@ namespace Viralis.Data.Configuration
                 .HasMany(u => u.Messages)
                 .WithOne(m => m.Sender)
                 .HasForeignKey(m => m.SenderId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // UserAssignments relation
             builder
                 .HasMany(u => u.UserAssignments)
                 .WithOne(ua => ua.Student)
                 .HasForeignKey(ua => ua.StudentId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

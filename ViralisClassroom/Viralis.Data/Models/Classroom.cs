@@ -11,11 +11,15 @@ namespace Viralis.Data.Models
     {
         public Guid Id { get; set; } = Guid.NewGuid();
 
-        [Required]
+        [Required, MaxLength(150)]
         public string Name { get; set; } = null!;
 
         [Required]
         public string Subject { get; set; } = null!;
+
+        [Required]
+        public Guid OwnerTeacherId { get; set; }
+        public ApplicationUser OwnerTeacher { get; set; } = null!;
 
         public ICollection<ClassroomTeacher> Teachers { get; set; } 
             = new List<ClassroomTeacher>();

@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Viralis.Common\Viralis.Common.csproj" />
     <ProjectReference Include="..\Viralis.Data\Viralis.Data.csproj" />
   </ItemGroup>
 

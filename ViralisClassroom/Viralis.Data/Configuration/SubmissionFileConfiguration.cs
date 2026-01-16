@@ -11,7 +11,7 @@ namespace Viralis.Data.Configuration
             builder.HasOne(f => f.Submission)
                    .WithMany(s => s.Files)
                    .HasForeignKey(f => f.SubmissionId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -137,12 +137,10 @@ namespace Viralis.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -178,12 +176,10 @@ namespace Viralis.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -267,13 +263,19 @@ namespace Viralis.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<Guid>("OwnerTeacherId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Subject")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerTeacherId");
 
                     b.ToTable("Classrooms");
                 });
@@ -319,7 +321,8 @@ namespace Viralis.Data.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(750)
+                        .HasColumnType("nvarchar(750)");
 
                     b.Property<Guid?>("ParentMessageId")
                         .HasColumnType("uniqueidentifier");
@@ -418,7 +421,7 @@ namespace Viralis.Data.Migrations
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("SubmissionId")
+                    b.Property<Guid?>("SubmissionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("AssignmentId", "StudentId");
@@ -439,7 +442,7 @@ namespace Viralis.Data.Migrations
                     b.HasOne("Viralis.Data.Models.Classroom", "Classroom")
                         .WithMany("Assignments")
                         .HasForeignKey("ClassroomId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("AssigningTeacher");
@@ -498,18 +501,29 @@ namespace Viralis.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Viralis.Data.Models.Classroom", b =>
+                {
+                    b.HasOne("Viralis.Data.Models.ApplicationUser", "OwnerTeacher")
+                        .WithMany()
+                        .HasForeignKey("OwnerTeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OwnerTeacher");
+                });
+
             modelBuilder.Entity("Viralis.Data.Models.ClassroomStudent", b =>
                 {
                     b.HasOne("Viralis.Data.Models.Classroom", "Classroom")
                         .WithMany("Students")
                         .HasForeignKey("ClassroomId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Viralis.Data.Models.ApplicationUser", "Student")
                         .WithMany("ClassroomStudents")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Classroom");
@@ -522,13 +536,13 @@ namespace Viralis.Data.Migrations
                     b.HasOne("Viralis.Data.Models.Classroom", "Classroom")
                         .WithMany("Teachers")
                         .HasForeignKey("ClassroomId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Viralis.Data.Models.ApplicationUser", "Teacher")
                         .WithMany("ClassroomTeachers")
                         .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Classroom");
@@ -570,7 +584,7 @@ namespace Viralis.Data.Migrations
                     b.HasOne("Viralis.Data.Models.UserAssignment", "UserAssignment")
                         .WithOne("Submission")
                         .HasForeignKey("Viralis.Data.Models.Submission", "AssignmentId", "StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("UserAssignment");
@@ -592,13 +606,13 @@ namespace Viralis.Data.Migrations
                     b.HasOne("Assignment", "Assignment")
                         .WithMany("AssignedStudents")
                         .HasForeignKey("AssignmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Viralis.Data.Models.ApplicationUser", "Student")
                         .WithMany("UserAssignments")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Assignment");

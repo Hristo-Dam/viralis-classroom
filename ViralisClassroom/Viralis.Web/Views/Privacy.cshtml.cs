@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Viralis.Web.Pages
+namespace Viralis.Web.Views
 {
     public class PrivacyModel : PageModel
     {

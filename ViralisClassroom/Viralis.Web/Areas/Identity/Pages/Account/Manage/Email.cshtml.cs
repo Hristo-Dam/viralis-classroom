@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace ScaffoldProj.Areas.Identity.Pages.Account.Manage
+namespace Viralis.Web.Areas.Identity.Pages.Account.Manage
 {
     public class EmailModel : PageModel
     {

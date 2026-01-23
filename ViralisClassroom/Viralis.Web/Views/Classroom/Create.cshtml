@@ -1,0 +1,24 @@
+﻿@using Viralis.Common.DTOs.Classroom
+@model CreateClassroomViewModel
+
+<h2>Create Classroom</h2>
+
+<form asp-action="Create" method="post">
+    <div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" />
+        <span asp-validation-for="Name"></span>
+    </div>
+
+    <div>
+        <label asp-for="Subject"></label>
+        <input asp-for="Subject" />
+        <span asp-validation-for="Subject"></span>
+    </div>
+
+    <button type="submit">Create</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

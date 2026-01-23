@@ -1,0 +1,19 @@
+﻿@using Viralis.Common.DTOs.Classroom
+@model IEnumerable<ClassroomListViewModel>
+
+<h2>My Classrooms</h2>
+
+<a asp-action="Create">Create Classroom</a>
+
+<ul>
+    @foreach (var classroom in Model)
+    {
+        <li>
+            <strong>@classroom.Name</strong> (@classroom.Subject)
+            @if (classroom.IsTeacher)
+            {
+                <span> — Teacher</span>
+            }
+        </li>
+    }
+</ul>

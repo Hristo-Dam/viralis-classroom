@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Viralis.Data.Models;
-using Viralis.Common.DTOs;
 using Viralis.Services.Interfaces;
+using Viralis.Common.DTOs.Classroom;
 
 namespace Viralis.Web.Controllers
 {
@@ -20,8 +20,20 @@ namespace Viralis.Web.Controllers
             this.userManager = userManager;
         }
 
+        [Authorize]
+        public async Task<IActionResult> Index()
+        {
+            Guid userId = Guid.Parse(userManager.GetUserId(User)!);
+
+            IEnumerable<ClassroomListViewModel> classrooms = await classroomService.GetUserClassroomsAsync(userId);
+
+            return View(classrooms);
+        }
+
+
+        [HttpGet]
         [Authorize(Roles = "Teacher")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             return View();
         }
@@ -33,11 +45,18 @@ namespace Viralis.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var userId = Guid.Parse(userManager.GetUserId(User)!);
+            Guid userId = Guid.Parse(userManager.GetUserId(User)!);
 
-            await classroomService.CreateAsync(model, userId);
+            var dto = new CreateClassroomViewModel
+            {
+                Name = model.Name,
+                Subject = model.Subject
+            };
+
+            await classroomService.CreateAsync(dto, userId);
 
             return RedirectToAction(nameof(Index));
         }
+
     }
 }

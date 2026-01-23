@@ -11,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Viralis.Data.Models;
 
-namespace ScaffoldProj.Areas.Identity.Pages.Account
+namespace Viralis.Web.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Viralis.Data.Models
+﻿namespace Viralis.Data.Models
 {
     public class ClassroomTeacher
     {
@@ -13,5 +7,7 @@ namespace Viralis.Data.Models
 
         public Guid TeacherId { get; set; }
         public ApplicationUser Teacher { get; set; } = null!;
+
+        public bool IsOwner { get; set; }
     }
 }

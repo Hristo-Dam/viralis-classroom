@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Viralis.Data.Models
+﻿namespace Viralis.Data.Models
 {
     public class ClassroomStudent
     {

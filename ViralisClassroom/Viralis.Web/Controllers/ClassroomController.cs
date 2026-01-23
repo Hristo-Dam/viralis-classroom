@@ -1,31 +1,23 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Viralis.Data.Models;
+using Viralis.Common.ViewModels.Classroom;
 using Viralis.Services.Interfaces;
-using Viralis.Common.DTOs.Classroom;
 
 namespace Viralis.Web.Controllers
 {
     public class ClassroomController : BaseController
     {
         private readonly IClassroomService classroomService;
-        private readonly UserManager<ApplicationUser> userManager;
 
-        public ClassroomController(
-            IClassroomService classroomService,
-            UserManager<ApplicationUser> userManager)
+        public ClassroomController(IClassroomService classroomService)
         {
             this.classroomService = classroomService;
-            this.userManager = userManager;
         }
 
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            Guid userId = Guid.Parse(userManager.GetUserId(User)!);
-
-            IEnumerable<ClassroomListViewModel> classrooms = await classroomService.GetUserClassroomsAsync(userId);
+            IEnumerable<ClassroomListViewModel> classrooms = await classroomService.GetUserClassroomsAsync(CurrentUserId);
 
             return View(classrooms);
         }
@@ -45,18 +37,22 @@ namespace Viralis.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            Guid userId = Guid.Parse(userManager.GetUserId(User)!);
-
-            var dto = new CreateClassroomViewModel
+            var result = new CreateClassroomViewModel
             {
                 Name = model.Name,
                 Subject = model.Subject
             };
 
-            await classroomService.CreateAsync(dto, userId);
+            try
+            {
+                await classroomService.CreateAsync(result, CurrentUserId);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
 
             return RedirectToAction(nameof(Index));
         }
-
     }
 }

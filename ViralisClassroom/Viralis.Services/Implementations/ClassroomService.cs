@@ -1,8 +1,9 @@
 ﻿using Viralis.Data;
 using Viralis.Data.Models;
 using Viralis.Services.Interfaces;
-using Viralis.Common.DTOs.Classroom;
 using Microsoft.EntityFrameworkCore;
+using Viralis.Common.ViewModels.Classroom;
+using Viralis.Common.Constants;
 
 namespace Viralis.Services.Implementations
 {
@@ -17,16 +18,32 @@ namespace Viralis.Services.Implementations
 
         public async Task CreateAsync(CreateClassroomViewModel model, Guid teacherId)
         {
+            var teacherRoleId = await db.Roles
+                .Where(r => r.Name == RoleConstants.Teacher)
+                .Select(r => r.Id)
+                .FirstOrDefaultAsync();
+
+            if (teacherRoleId == Guid.Empty)
+                throw new InvalidOperationException("Teacher role does not exist.");
+
+            bool isTeacher = await db.UserRoles
+                .AnyAsync(ur =>
+                    ur.UserId == teacherId &&
+                    ur.RoleId == teacherRoleId);
+
+            if (!isTeacher)
+                throw new UnauthorizedAccessException("Only teachers can create classrooms.");
+
             var classroom = new Classroom
             {
                 Name = model.Name,
-                Subject = model.Subject,
-                OwnerTeacherId = teacherId
+                Subject = model.Subject
             };
 
             classroom.Teachers.Add(new ClassroomTeacher
             {
-                TeacherId = teacherId
+                TeacherId = teacherId,
+                IsOwner = true
             });
 
             db.Classrooms.Add(classroom);

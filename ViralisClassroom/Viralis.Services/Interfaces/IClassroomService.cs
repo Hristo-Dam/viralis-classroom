@@ -1,4 +1,4 @@
-﻿using Viralis.Common.DTOs.Classroom;
+﻿using Viralis.Common.ViewModels.Classroom;
 
 namespace Viralis.Services.Interfaces
 {

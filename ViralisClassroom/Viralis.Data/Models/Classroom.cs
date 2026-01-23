@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Viralis.Data.Models
 {
@@ -17,11 +12,7 @@ namespace Viralis.Data.Models
         [Required]
         public string Subject { get; set; } = null!;
 
-        [Required]
-        public Guid OwnerTeacherId { get; set; }
-        public ApplicationUser OwnerTeacher { get; set; } = null!;
-
-        public ICollection<ClassroomTeacher> Teachers { get; set; } 
+        public ICollection<ClassroomTeacher> Teachers { get; set; }
             = new List<ClassroomTeacher>();
 
         public ICollection<ClassroomStudent> Students { get; set; }

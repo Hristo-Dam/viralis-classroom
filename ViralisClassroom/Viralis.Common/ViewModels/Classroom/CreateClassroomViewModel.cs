@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Viralis.Common.DTOs.Classroom
+namespace Viralis.Common.ViewModels.Classroom
 {
     public class CreateClassroomViewModel
     {

@@ -12,6 +12,8 @@ namespace Viralis.Data.Models
         [Required]
         public string Subject { get; set; } = null!;
 
+        public string JoinCode { get; set; } = null!;
+
         public ICollection<ClassroomTeacher> Teachers { get; set; }
             = new List<ClassroomTeacher>();
 

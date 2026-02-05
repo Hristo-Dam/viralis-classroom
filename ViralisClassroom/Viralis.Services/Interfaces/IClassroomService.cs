@@ -6,5 +6,7 @@ namespace Viralis.Services.Interfaces
     {
         Task CreateAsync(CreateClassroomViewModel model, Guid teacherId);
         Task<IEnumerable<ClassroomListViewModel>> GetUserClassroomsAsync(Guid userId);
+        Task JoinByCodeAsync(string joinCode, Guid studentId);
+
     }
 }

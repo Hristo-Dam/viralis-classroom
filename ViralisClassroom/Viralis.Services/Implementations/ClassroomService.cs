@@ -46,6 +46,8 @@ namespace Viralis.Services.Implementations
                 IsOwner = true
             });
 
+            classroom.JoinCode = Guid.NewGuid().ToString("N")[..6].ToUpper();
+
             db.Classrooms.Add(classroom);
             await db.SaveChangesAsync();
         }
@@ -85,6 +87,31 @@ namespace Viralis.Services.Implementations
                 .ToList();
 
             return result;
+        }
+
+        public async Task JoinByCodeAsync(string joinCode, Guid studentId)
+        {
+            var classroom = await db.Classrooms
+                .FirstOrDefaultAsync(c => c.JoinCode == joinCode);
+
+            if (classroom == null)
+                throw new ArgumentException("Invalid join code");
+
+            bool alreadyJoined = await db.ClassroomStudents
+                .AnyAsync(cs =>
+                    cs.ClassroomId == classroom.Id &&
+                    cs.StudentId == studentId);
+
+            if (alreadyJoined)
+                throw new InvalidOperationException("Already joined");
+
+            db.ClassroomStudents.Add(new ClassroomStudent
+            {
+                ClassroomId = classroom.Id,
+                StudentId = studentId
+            });
+
+            await db.SaveChangesAsync();
         }
     }
 }

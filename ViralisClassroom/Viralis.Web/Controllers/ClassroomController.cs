@@ -1,23 +1,24 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Viralis.Common.ViewModels.Classroom;
+using Viralis.Services.Implementations;
 using Viralis.Services.Interfaces;
 
 namespace Viralis.Web.Controllers
 {
     public class ClassroomController : BaseController
     {
-        private readonly IClassroomService classroomService;
+        private readonly IClassroomService _classroomService;
 
         public ClassroomController(IClassroomService classroomService)
         {
-            this.classroomService = classroomService;
+            this._classroomService = classroomService;
         }
 
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            IEnumerable<ClassroomListViewModel> classrooms = await classroomService.GetUserClassroomsAsync(CurrentUserId);
+            IEnumerable<ClassroomListViewModel> classrooms = await _classroomService.GetUserClassroomsAsync(CurrentUserId);
 
             return View(classrooms);
         }
@@ -25,7 +26,7 @@ namespace Viralis.Web.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Teacher")]
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             return View();
         }
@@ -45,11 +46,31 @@ namespace Viralis.Web.Controllers
 
             try
             {
-                await classroomService.CreateAsync(result, CurrentUserId);
+                await _classroomService.CreateAsync(result, CurrentUserId);
             }
             catch (UnauthorizedAccessException)
             {
                 return Forbid();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> Join(JoinClassroomViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            try
+            {
+                await _classroomService.JoinByCodeAsync(model.JoinCode, CurrentUserId);
+            }
+            catch
+            {
+                ModelState.AddModelError("", "Invalid or already used join code");
+                return View(model);
             }
 
             return RedirectToAction(nameof(Index));

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Viralis.Common.ViewModels.Classroom;
-using Viralis.Services.Implementations;
 using Viralis.Services.Interfaces;
 
 namespace Viralis.Web.Controllers
@@ -38,15 +37,9 @@ namespace Viralis.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var result = new CreateClassroomViewModel
-            {
-                Name = model.Name,
-                Subject = model.Subject
-            };
-
             try
             {
-                await _classroomService.CreateAsync(result, CurrentUserId);
+                await _classroomService.CreateAsync(model, CurrentUserId);
             }
             catch (UnauthorizedAccessException)
             {

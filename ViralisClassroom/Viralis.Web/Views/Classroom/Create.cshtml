@@ -3,7 +3,9 @@
 
 <h2>Create Classroom</h2>
 
-<form asp-action="Create" method="post">
+<form asp-action="Create" asp-controller="Classroom" method="post">
+    @Html.AntiForgeryToken()
+
     <div>
         <label asp-for="Name"></label>
         <input asp-for="Name" />

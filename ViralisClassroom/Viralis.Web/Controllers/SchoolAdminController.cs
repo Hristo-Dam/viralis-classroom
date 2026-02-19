@@ -1,27 +1,36 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Viralis.Common.Constants;
 using Viralis.Common.ViewModels.SchoolAdmin;
+using Viralis.Data;
 using Viralis.Data.Models;
 
 namespace Viralis.Web.Controllers
 {
     [Authorize(Roles = "School Administrator")]
-    public class SchoolAdminController : Controller
+    public class SchoolAdminController : BaseController
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationDbContext _db;
 
-        public SchoolAdminController(UserManager<ApplicationUser> userManager)
+        public SchoolAdminController(UserManager<ApplicationUser> userManager, ApplicationDbContext db)
         {
             _userManager = userManager;
+            _db = db;
         }
 
         public async Task<IActionResult> Index()
         {
-            // Get all teachers
-            var teachers = await _userManager.GetUsersInRoleAsync(RoleConstants.TEACHER);
-            return View(teachers);
+            var school = await _db.SchoolAdministrators
+                .Include(s => s.Teachers)
+                .FirstOrDefaultAsync(s => s.SchoolAdminId == CurrentUserId);
+
+            if (school == null)
+                return View(new List<ApplicationUser>());
+
+            return View(school.Teachers.ToList());
         }
 
         [HttpGet]
@@ -32,7 +41,6 @@ namespace Viralis.Web.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            // Check if email already taken
             var existing = await _userManager.FindByEmailAsync(model.Email);
             if (existing != null)
             {
@@ -40,7 +48,26 @@ namespace Viralis.Web.Controllers
                 return View(model);
             }
 
-            var user = new ApplicationUser();
+            // Check if email already taken
+            var school = await _db.SchoolAdministrators
+                            .FirstOrDefaultAsync(s => s.SchoolAdminId == CurrentUserId);
+
+            if (school == null)
+            {
+                school = new SchoolAdministrator
+                {
+                    SchoolAdminId = CurrentUserId,
+                    Name = User.Identity!.Name!
+                };
+                _db.SchoolAdministrators.Add(school);
+                await _db.SaveChangesAsync();
+            }
+
+            var user = new ApplicationUser
+            {
+                SchoolAdminId = school.Id // link teacher to this admin's school
+            };
+
             await _userManager.SetUserNameAsync(user, model.Email);
             await _userManager.SetEmailAsync(user, model.Email);
 
@@ -62,8 +89,16 @@ namespace Viralis.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteTeacher(Guid userId)
         {
+            var school = await _db.SchoolAdministrators
+                .FirstOrDefaultAsync(s => s.SchoolAdminId == CurrentUserId);
+
+            if (school == null) return Forbid();
+
             var user = await _userManager.FindByIdAsync(userId.ToString());
-            if (user == null) return NotFound();
+
+            // Make sure this teacher actually belongs to THIS admin's school
+            if (user == null || user.SchoolAdminId != school.Id)
+                return Forbid();
 
             await _userManager.DeleteAsync(user);
             return RedirectToAction(nameof(Index));

@@ -4,6 +4,8 @@ namespace Viralis.Data.Models
 {
     public class ApplicationUser : IdentityUser<Guid>
     {
+        public Guid? SchoolAdminId { get; set; }
+        public SchoolAdministrator? SchoolAdmin { get; set; }
         public ICollection<ClassroomStudent> ClassroomStudents { get; set; }
             = new List<ClassroomStudent>();
 

@@ -1,0 +1,424 @@
+﻿/* ─── Banner ─────────────────────────────────────────────── */
+.classroom-banner {
+    background: linear-gradient(135deg, #1a2744 0%, #0f1117 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    padding: 2.5rem 0 2rem;
+}
+
+.classroom-banner-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.classroom-banner-subject {
+    color: #4f8ef7;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin: 0 0 0.4rem;
+}
+
+.classroom-banner-title {
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -1px;
+    margin: 0;
+}
+
+.join-code-box {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    padding: 0.75rem 1.25rem;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.join-code-label {
+    display: block;
+    font-size: 0.72rem;
+    color: #8892a4;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.25rem;
+}
+
+.join-code-value {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #4f8ef7;
+    letter-spacing: 4px;
+}
+
+/* ─── Tabs ───────────────────────────────────────────────── */
+.classroom-tabs-bar {
+    background: #0f1117;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    position: sticky;
+    top: 65px;
+    z-index: 100;
+}
+
+.classroom-tabs {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.5rem 0;
+}
+
+.classroom-tab {
+    background: none;
+    border: none;
+    color: #8892a4;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.5rem 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+}
+
+    .classroom-tab:hover {
+        color: #e2e8f0;
+        background: rgba(255,255,255,0.05);
+    }
+
+    .classroom-tab.active {
+        color: #4f8ef7;
+        background: rgba(79,142,247,0.1);
+        font-weight: 600;
+    }
+
+/* ─── Tab Content ────────────────────────────────────────── */
+.classroom-body {
+    padding: 2rem 0;
+}
+
+.tab-content {
+    display: none;
+}
+
+    .tab-content.active {
+        display: block;
+    }
+
+/* ─── Stream ─────────────────────────────────────────────── */
+.stream-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+@media (max-width: 768px) {
+    .stream-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .stream-sidebar {
+        order: 2;
+    }
+}
+
+.sidebar-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem;
+}
+
+    .sidebar-card h4 {
+        font-family: 'Sora', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: var(--text);
+    }
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-top: 1px solid var(--border);
+    font-size: 0.88rem;
+}
+
+.info-label {
+    color: var(--text-muted);
+}
+
+.code-chip {
+    background: rgba(79,142,247,0.1);
+    color: #4f8ef7;
+    font-weight: 700;
+    font-family: 'Sora', sans-serif;
+    letter-spacing: 2px;
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+/* ─── Stream Feed ────────────────────────────────────────── */
+.stream-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.stream-card-link {
+    text-decoration: none;
+    display: block;
+}
+
+.stream-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.18s ease;
+}
+
+    .stream-card:hover {
+        border-color: rgba(79,142,247,0.35);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+        transform: translateY(-2px);
+    }
+
+.stream-card-icon {
+    font-size: 1.75rem;
+    flex-shrink: 0;
+}
+
+.stream-card-body {
+    flex: 1;
+}
+
+.stream-card-type {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--accent);
+    margin: 0 0 0.2rem;
+}
+
+.stream-card-title {
+    font-weight: 600;
+    color: var(--text);
+    font-size: 0.95rem;
+    margin: 0 0 0.2rem;
+}
+
+.stream-card-meta {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.stream-overdue {
+    color: #fc8181;
+}
+
+.stream-card-status {
+    flex-shrink: 0;
+}
+
+/* ─── Empty State ────────────────────────────────────────── */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-muted);
+}
+
+.empty-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.empty-state p {
+    font-size: 1rem;
+    margin: 0;
+}
+
+.empty-sub {
+    font-size: 0.875rem;
+    margin-top: 0.4rem;
+    display: block;
+}
+
+/* ─── Tab Actions ────────────────────────────────────────── */
+.tab-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+}
+
+.btn-primary-action {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.6rem 1.25rem;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+    .btn-primary-action:hover {
+        background: var(--accent-dark);
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+/* ─── Members ────────────────────────────────────────────── */
+.members-section {
+    margin-bottom: 2.5rem;
+}
+
+.members-heading {
+    font-family: 'Sora', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.members-count {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: var(--border);
+    padding: 0.1rem 0.5rem;
+    border-radius: 20px;
+}
+
+.members-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.member-row {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.member-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4f8ef7, #7c5cbf);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+}
+
+.member-email {
+    font-size: 0.9rem;
+    color: var(--text);
+}
+
+.no-members {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    padding: 1rem 0;
+}
+
+/* ─── Classroom cards on Index ───────────────────────────── */
+.classroom-card-link {
+    text-decoration: none;
+    display: block;
+}
+
+.classroom-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.22s ease;
+    cursor: pointer;
+}
+
+    .classroom-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(0,0,0,0.09);
+        border-color: rgba(79,142,247,0.35);
+    }
+
+.classroom-card-header {
+    background: linear-gradient(135deg, #1a2744, #0f1117);
+    padding: 1.5rem;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.classroom-subject {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #4f8ef7;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.3rem;
+    display: block;
+}
+
+.classroom-name {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+}
+
+.classroom-card-footer {
+    padding: 0.9rem 1.25rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.badge-teacher {
+    background: rgba(79,142,247,0.1);
+    color: #4f8ef7;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.25rem 0.65rem;
+    border-radius: 20px;
+}
+
+.badge-student {
+    background: rgba(52,211,153,0.1);
+    color: #34d399;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.25rem 0.65rem;
+    border-radius: 20px;
+}

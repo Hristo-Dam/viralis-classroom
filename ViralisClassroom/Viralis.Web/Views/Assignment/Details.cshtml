@@ -1,0 +1,188 @@
+﻿@model Viralis.Common.ViewModels.Assignment.AssignmentDetailViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/classroom.css" />
+    <link rel="stylesheet" href="~/css/assignment.css" />
+}
+
+<div class="classroom-banner">
+    <div class="container">
+        <a asp-controller="Classroom" asp-action="Details"
+           asp-route-id="@Model.ClassroomId"
+           style="color:#4f8ef7; font-size:0.875rem; text-decoration:none;">
+            ← Back to classroom
+        </a>
+        <div class="classroom-banner-content" style="margin-top:0.5rem;">
+            <div>
+                <h1 class="classroom-banner-title">@Model.Title</h1>
+                <p style="color: @(Model.IsOverdue ? "#fc8181" : "#8892a4"); margin:0.3rem 0 0; font-size:0.875rem;">
+                    Due @Model.DueDate.ToString("MMM dd, yyyy 'at' HH:mm")
+                    @if (Model.IsOverdue)
+                    {
+                        <span> · Overdue</span>
+                    }
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container assignment-body">
+    <div class="assignment-layout">
+
+        <!-- Left: Instructions -->
+        <main class="assignment-main">
+            <div class="assignment-card">
+                <h3 class="assignment-section-title">Instructions</h3>
+                <p class="assignment-description">@Model.Description</p>
+            </div>
+
+            @if (Model.IsTeacher)
+            {
+                <!-- Teacher: Submission overview -->
+                <div class="assignment-card" style="margin-top:1.5rem;">
+                    <h3 class="assignment-section-title">
+                        Student Submissions
+                        <span class="members-count">
+                            @Model.Submissions.Count(s => s.HasSubmitted) / @Model.Submissions.Count
+                        </span>
+                    </h3>
+
+                    @if (!Model.Submissions.Any())
+                    {
+                        <p style="color:var(--text-muted); font-size:0.9rem;">
+                            No students enrolled yet.
+                        </p>
+                    }
+                    else
+                    {
+                        <div class="submission-list">
+                            @foreach (var sub in Model.Submissions)
+                            {
+                                <div class="submission-row">
+                                    <div class="member-avatar">
+                                        @sub.StudentEmail.Substring(0, 1).ToUpper()
+                                    </div>
+                                    <div class="submission-info">
+                                        <span class="submission-email">@sub.StudentEmail</span>
+                                        <span class="submission-status @(sub.HasSubmitted ? "status-submitted" : "status-missing")">
+                                            @(sub.HasSubmitted ? "Submitted" : "Missing")
+                                        </span>
+                                    </div>
+                                    <div class="submission-grade">
+                                        @if (sub.Grade.HasValue)
+                                        {
+                                            <span class="grade-chip">@sub.Grade / 100</span>
+                                        }
+                                        else if (sub.HasSubmitted)
+                                        {
+                                            <!-- Grade form -->
+                                            <form asp-action="Grade" method="post"
+                                                  class="grade-form">
+                                                <input type="hidden" name="SubmissionId"
+                                                       value="@sub.SubmissionId" />
+                                                <input type="hidden" name="ClassroomId"
+                                                       value="@Model.ClassroomId" />
+                                                <input type="number" name="Grade"
+                                                       min="0" max="100" placeholder="Grade"
+                                                       class="grade-input" />
+                                                <input type="text" name="Feedback"
+                                                       placeholder="Feedback (optional)"
+                                                       class="feedback-input" />
+                                                <button type="submit" class="grade-btn">Save</button>
+                                            </form>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </main>
+
+        <!-- Right: Submission panel (students only) -->
+        @if (!Model.IsTeacher)
+        {
+            <aside class="assignment-sidebar">
+                <div class="submission-panel">
+                    @if (Model.MySubmission != null)
+                    {
+                        <h4 class="submission-panel-title">Your Submission</h4>
+                        <div class="submission-meta">
+                            <span>Submitted @Model.MySubmission.SubmittedOn.ToString("MMM dd 'at' HH:mm")</span>
+                        </div>
+
+                        @if (Model.MySubmission.TextContent != null)
+                        {
+                            <p class="submission-text">@Model.MySubmission.TextContent</p>
+                        }
+
+                        @if (Model.MySubmission.FileNames.Any())
+                        {
+                            <ul class="submission-files">
+                                @foreach (var file in Model.MySubmission.FileNames)
+                                {
+                                    <li>📎 @file</li>
+                                }
+                            </ul>
+                        }
+
+                        @if (Model.MySubmission.Grade.HasValue)
+                        {
+                            <div class="grade-result">
+                                <span class="grade-label">Grade</span>
+                                <span class="grade-value">@Model.MySubmission.Grade / 100</span>
+                            </div>
+                        }
+
+                        @if (Model.MySubmission.TeacherFeedback != null)
+                        {
+                            <div class="feedback-box">
+                                <span class="feedback-label">Feedback</span>
+                                <p>@Model.MySubmission.TeacherFeedback</p>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <h4 class="submission-panel-title">Your Work</h4>
+
+                        @if (TempData["Error"] != null)
+                        {
+                            <div class="auth-validation-summary">@TempData["Error"]</div>
+                        }
+
+                        <form asp-action="Submit" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="AssignmentId" value="@Model.Id" />
+                            <input type="hidden" name="ClassroomId" value="@Model.ClassroomId" />
+
+                            <div class="form-field">
+                                <label class="form-label">Add a comment (optional)</label>
+                                <textarea name="TextContent" class="form-textarea" rows="3"
+                                  placeholder="Write something..."></textarea>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="form-label">Attach files</label>
+                                <input type="file" name="Files" multiple class="form-input"
+                                       style="padding: 0.5rem 1rem;" />
+                            </div>
+
+                            <button type="submit" class="btn-primary-action"
+                                    style="width:100%; text-align:center; padding:0.75rem; border:none; cursor:pointer;"
+                                    @(Model.IsOverdue ? "disabled" : "")>
+                                @(Model.IsOverdue ? "Past Due Date" : "Submit Assignment")
+                            </button>
+                        </form>
+                    }
+                </div>
+            </aside>
+        }
+
+    </div>
+</div>

@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/auth.css" />
+    <link rel="stylesheet" href="~/css/classroom.css" />
+    <link rel="stylesheet" href="~/css/assignment.css" />
+    @await RenderSectionAsync("Styles", required: false)
+
 </head>
 <body>
 
@@ -36,7 +40,7 @@
                                 </a>
                             </li>
                         }
-                        @if (User.IsInRole("SchoolAdmin"))
+                        @if (User.IsInRole("School Administrator"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="SchoolAdmin" asp-action="Index">
@@ -73,7 +77,7 @@
                         {
                             <span class="role-pill role-teacher">Teacher</span>
                         }
-                        else if (User.IsInRole("SchoolAdmin"))
+                        else if (User.IsInRole("School Administrator"))
                         {
                             <span class="role-pill role-schooladmin">School Admin</span>
                         }

@@ -1,0 +1,253 @@
+﻿@model Viralis.Common.ViewModels.Classroom.ClassroomDetailViewModel
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/classroom.css" />
+}
+
+<!-- Header Banner -->
+<div class="classroom-banner">
+    <div class="container">
+        <div class="classroom-banner-content">
+            <div>
+                <p class="classroom-banner-subject">@Model.Subject</p>
+                <h1 class="classroom-banner-title">@Model.Name</h1>
+            </div>
+            @if (Model.IsTeacher)
+            {
+                <div class="join-code-box">
+                    <span class="join-code-label">Class code</span>
+                    <span class="join-code-value">@Model.JoinCode</span>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Tabs -->
+<div class="classroom-tabs-bar">
+    <div class="container">
+        <nav class="classroom-tabs">
+            <button class="classroom-tab active" data-tab="stream">Stream</button>
+            <button class="classroom-tab" data-tab="assignments">Assignments</button>
+            <button class="classroom-tab" data-tab="members">Members</button>
+            <button class="classroom-tab" data-tab="chat">Chat</button>
+        </nav>
+    </div>
+</div>
+
+<!-- Tab Content -->
+<div class="container classroom-body">
+
+    <!-- Stream Tab -->
+    <div class="tab-content active" id="tab-stream">
+        <div class="stream-layout">
+            <aside class="stream-sidebar">
+                <div class="sidebar-card">
+                    <h4>Class info</h4>
+                    <div class="info-row">
+                        <span class="info-label">Subject</span>
+                        <span>@Model.Subject</span>
+                    </div>
+                    @if (Model.IsTeacher)
+                    {
+                        <div class="info-row">
+                            <span class="info-label">Join code</span>
+                            <span class="code-chip">@Model.JoinCode</span>
+                        </div>
+                    }
+                    <div class="info-row">
+                        <span class="info-label">Students</span>
+                        <span>@Model.Students.Count</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Assignments</span>
+                        <span>@Model.Assignments.Count</span>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="stream-main">
+                @if (!Model.Assignments.Any())
+                {
+                    <div class="empty-state">
+                        <div class="empty-icon">📢</div>
+                        <p>No activity yet.</p>
+                        @if (Model.IsTeacher)
+                        {
+                            <span class="empty-sub">Create an assignment to get started.</span>
+                        }
+                        else
+                        {
+                            <span class="empty-sub">Your teacher hasn't posted anything yet.</span>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="stream-feed">
+                        @foreach (var assignment in Model.Assignments)
+                        {
+                            <a asp-controller="Assignment" asp-action="Details"
+                               asp-route-id="@assignment.Id"
+                               asp-route-classroomId="@Model.Id"
+                               class="stream-card-link">
+                                <div class="stream-card">
+                                    <div class="stream-card-icon">📋</div>
+                                    <div class="stream-card-body">
+                                        <p class="stream-card-type">Assignment</p>
+                                        <p class="stream-card-title">@assignment.Title</p>
+                                        <p class="stream-card-meta">
+                                            Due @assignment.DueDate.ToString("MMM dd, yyyy 'at' HH:mm")
+                                            @if (assignment.IsOverdue)
+                                            {
+                                                <span class="stream-overdue"> · Overdue</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    @if (!Model.IsTeacher)
+                                    {
+                                        <div class="stream-card-status">
+                                            @if (assignment.HasSubmitted)
+                                            {
+                                                <span class="alc-badge badge-done">Submitted ✓</span>
+                                            }
+                                            else if (assignment.IsOverdue)
+                                            {
+                                                <span class="alc-badge badge-overdue">Missing</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="alc-badge">Pending</span>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </a>
+                        }
+                    </div>
+                }
+            </main>
+        </div>
+    </div>
+
+    <!-- Assignments Tab -->
+    <!-- Assignments Tab -->
+    <div class="tab-content" id="tab-assignments">
+        @if (Model.IsTeacher)
+        {
+            <div class="tab-actions">
+                <a asp-controller="Assignment" asp-action="Create"
+                   asp-route-classroomId="@Model.Id"
+                   class="btn-primary-action">+ Create Assignment</a>
+            </div>
+        }
+
+        @if (!Model.Assignments.Any())
+        {
+            <div class="empty-state">
+                <div class="empty-icon">📋</div>
+                <p>No assignments yet.</p>
+            </div>
+        }
+        else
+        {
+            <div class="assignment-cards">
+                @foreach (var a in Model.Assignments)
+                {
+                    <a asp-controller="Assignment" asp-action="Details"
+                       asp-route-id="@a.Id"
+                       asp-route-classroomId="@Model.Id"
+                       class="assignment-card-link">
+                        <div class="assignment-list-card @(a.IsOverdue ? "overdue" : "")">
+                            <div class="alc-left">
+                                <div class="alc-icon">📋</div>
+                                <div>
+                                    <p class="alc-title">@a.Title</p>
+                                    <p class="alc-due">Due @a.DueDate.ToString("MMM dd, yyyy")</p>
+                                </div>
+                            </div>
+                            <div class="alc-right">
+                                @if (Model.IsTeacher)
+                                {
+                                    <span class="alc-badge">
+                                        @a.SubmissionCount submitted
+                                    </span>
+                                }
+                                else if (a.HasSubmitted)
+                                {
+                                    <span class="alc-badge badge-done">Submitted ✓</span>
+                                }
+                                else if (a.IsOverdue)
+                                {
+                                    <span class="alc-badge badge-overdue">Missing</span>
+                                }
+                            </div>
+                        </div>
+                    </a>
+                }
+            </div>
+        }
+    </div>
+
+    <!-- Members Tab -->
+    <div class="tab-content" id="tab-members">
+        <div class="members-section">
+            <h3 class="members-heading">Teachers <span class="members-count">@Model.Teachers.Count</span></h3>
+            <div class="members-list">
+                @foreach (var teacher in Model.Teachers)
+                {
+                    <div class="member-row">
+                        <div class="member-avatar">@teacher.Email.Substring(0, 1).ToUpper()</div>
+                        <span class="member-email">@teacher.Email</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="members-section">
+            <h3 class="members-heading">Students <span class="members-count">@Model.Students.Count</span></h3>
+            @if (!Model.Students.Any())
+            {
+                <p class="no-members">No students have joined yet.</p>
+            }
+            else
+            {
+                <div class="members-list">
+                    @foreach (var student in Model.Students)
+                    {
+                        <div class="member-row">
+                            <div class="member-avatar">@student.Email.Substring(0, 1).ToUpper()</div>
+                            <span class="member-email">@student.Email</span>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Chat Tab (placeholder for Phase 3) -->
+    <div class="tab-content" id="tab-chat">
+        <div class="empty-state">
+            <div class="empty-icon">💬</div>
+            <p>Chat coming soon.</p>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.classroom-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.classroom-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+            });
+        });
+    </script>
+}

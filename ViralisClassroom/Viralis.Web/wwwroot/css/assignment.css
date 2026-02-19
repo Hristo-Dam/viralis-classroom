@@ -1,0 +1,402 @@
+﻿.assignment-body {
+    padding: 2rem 0;
+}
+
+.assignment-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+@media (max-width: 768px) {
+    .assignment-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.assignment-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.75rem;
+}
+
+.assignment-section-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.assignment-description {
+    color: var(--text-muted);
+    line-height: 1.7;
+    font-size: 0.95rem;
+    white-space: pre-wrap;
+}
+
+/* Submission list (teacher) */
+.submission-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.submission-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.submission-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.submission-email {
+    font-size: 0.9rem;
+    color: var(--text);
+}
+
+.submission-status {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.status-submitted {
+    color: #34d399;
+}
+
+.status-missing {
+    color: #fc8181;
+}
+
+.grade-chip {
+    background: rgba(79,142,247,0.1);
+    color: #4f8ef7;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+}
+
+.grade-form {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.grade-input {
+    width: 70px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text);
+    outline: none;
+}
+
+.feedback-input {
+    flex: 1;
+    min-width: 120px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.35rem 0.6rem;
+    font-size: 0.85rem;
+    color: var(--text);
+    outline: none;
+}
+
+.grade-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s;
+}
+
+    .grade-btn:hover {
+        background: var(--accent-dark);
+    }
+
+/* Submission panel (student) */
+.assignment-sidebar {
+    position: sticky;
+    top: 130px;
+}
+
+.submission-panel {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+}
+
+.submission-panel-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.submission-meta {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+}
+
+.submission-text {
+    font-size: 0.9rem;
+    color: var(--text);
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.submission-files {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+    .submission-files li {
+        font-size: 0.875rem;
+        color: var(--accent);
+    }
+
+.grade-result {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(79,142,247,0.06);
+    border: 1px solid rgba(79,142,247,0.2);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.grade-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--text-muted);
+}
+
+.grade-value {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #4f8ef7;
+}
+
+.feedback-box {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 0.75rem;
+}
+
+.feedback-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 0.3rem;
+}
+
+.feedback-box p {
+    font-size: 0.9rem;
+    color: var(--text);
+    margin: 0;
+}
+
+/* Assignment list cards */
+.assignment-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.assignment-card-link {
+    text-decoration: none;
+    display: block;
+}
+
+.assignment-list-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.18s ease;
+}
+
+    .assignment-list-card:hover {
+        border-color: rgba(79,142,247,0.35);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+        transform: translateX(4px);
+    }
+
+    .assignment-list-card.overdue {
+        border-left: 3px solid #fc8181;
+    }
+
+.alc-left {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.alc-icon {
+    font-size: 1.4rem;
+}
+
+.alc-title {
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.alc-due {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin: 0.15rem 0 0;
+}
+
+.alc-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.65rem;
+    border-radius: 20px;
+    background: rgba(100,116,139,0.1);
+    color: var(--text-muted);
+}
+
+.badge-done {
+    background: rgba(52,211,153,0.1);
+    color: #34d399;
+}
+
+.badge-overdue {
+    background: rgba(252,129,129,0.1);
+    color: #fc8181;
+}
+
+/* ─── Form Styles ────────────────────────────────────────── */
+.form-field {
+    margin-bottom: 1.25rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.45rem;
+}
+
+.form-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    transition: all 0.18s ease;
+    outline: none;
+}
+
+    .form-input:focus {
+        border-color: var(--accent);
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.1);
+    }
+
+.form-textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    transition: all 0.18s ease;
+    outline: none;
+    resize: vertical;
+    min-height: 140px;
+}
+
+    .form-textarea:focus {
+        border-color: var(--accent);
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.1);
+    }
+
+.form-field-error {
+    color: #e53e3e;
+    font-size: 0.8rem;
+    margin-top: 0.35rem;
+    display: block;
+}
+
+.form-error-summary {
+    background: rgba(229, 62, 62, 0.06);
+    border: 1px solid rgba(229, 62, 62, 0.25);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+    color: #e53e3e;
+    font-size: 0.875rem;
+}
+
+.btn-secondary-action {
+    background: var(--bg);
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 0.9rem;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    text-decoration: none;
+    transition: all 0.18s ease;
+    display: inline-block;
+}
+
+    .btn-secondary-action:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+    }

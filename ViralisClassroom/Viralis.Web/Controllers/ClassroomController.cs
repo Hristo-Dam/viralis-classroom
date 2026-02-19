@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Viralis.Common.ViewModels.Classroom;
-using Viralis.Services.Interfaces;
+using Viralis.Services.Interfaces.Classroom;
 
 namespace Viralis.Web.Controllers
 {
@@ -72,6 +72,16 @@ namespace Viralis.Web.Controllers
         public IActionResult Join()
         {
             return View(new JoinClassroomViewModel());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var model = await _classroomService.GetDetailAsync(id, CurrentUserId);
+
+            if (model == null) return Forbid();
+
+            return View(model);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Viralis.Data;
 using Viralis.Data.Models;
-using Viralis.Services.Interfaces;
+using Viralis.Services.Interfaces.Classroom;
 
 namespace Viralis.Services.Implementations
 {

@@ -13,6 +13,13 @@ namespace Viralis.Data.Configuration
                 .WithOne(f => f.Submission)
                 .HasForeignKey(f => f.SubmissionId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Property(s => s.Links)
+                .HasConversion(
+                    v => string.Join(',', v ?? new List<string>()),
+                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
+                );
         }
     }
 }

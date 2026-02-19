@@ -1,0 +1,67 @@
+﻿@model Viralis.Common.ViewModels.Assignment.CreateAssignmentViewModel
+
+@{
+    ViewData["Title"] = "Create Assignment";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/classroom.css" />
+    <link rel="stylesheet" href="~/css/assignment.css" />
+}
+
+<div class="classroom-banner">
+    <div class="container">
+        <a asp-controller="Classroom" asp-action="Details"
+           asp-route-id="@Model.ClassroomId"
+           style="color:#4f8ef7; font-size:0.875rem; text-decoration:none;">
+            ← Back to classroom
+        </a>
+        <h1 class="classroom-banner-title" style="margin-top:0.5rem;">New Assignment</h1>
+    </div>
+</div>
+
+<div class="container" style="max-width:680px; padding: 2rem 1rem;">
+    <div class="assignment-card">
+        <form asp-action="Create" method="post">
+            <input type="hidden" asp-for="ClassroomId" />
+
+            <div asp-validation-summary="ModelOnly" class="form-error-summary"
+                 style="display:@(ViewData.ModelState.IsValid ? "none" : "block")"></div>
+
+            <div class="form-field">
+                <label asp-for="Title" class="form-label">Title</label>
+                <input asp-for="Title" class="form-input" placeholder="e.g. Chapter 5 Essay" />
+                <span asp-validation-for="Title" class="form-field-error"></span>
+            </div>
+
+            <div class="form-field">
+                <label asp-for="Description" class="form-label">Instructions</label>
+                <textarea asp-for="Description" class="form-textarea" rows="6"
+                          placeholder="Describe what students need to do..."></textarea>
+                <span asp-validation-for="Description" class="form-field-error"></span>
+            </div>
+
+            <div class="form-field">
+                <label asp-for="DueDate" class="form-label">Due Date</label>
+                <input asp-for="DueDate" type="datetime-local" class="form-input" />
+                <span asp-validation-for="DueDate" class="form-field-error"></span>
+            </div>
+
+            <div style="display:flex; gap:1rem; margin-top:1.75rem;">
+                <button type="submit" class="btn-primary-action" style="flex:1; text-align:center; padding:0.75rem; border:none; cursor:pointer;">
+                    Create Assignment
+                </button>
+                <a asp-controller="Classroom" asp-action="Details"
+                   asp-route-id="@Model.ClassroomId"
+                   class="btn-secondary-action" style="flex:1; text-align:center; padding:0.75rem;">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,9 +1,10 @@
-﻿using Viralis.Data;
-using Viralis.Data.Models;
-using Viralis.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Viralis.Common.ViewModels.Classroom;
+﻿using Microsoft.EntityFrameworkCore;
 using Viralis.Common.Constants;
+using Viralis.Common.ViewModels.Assignment;
+using Viralis.Common.ViewModels.Classroom;
+using Viralis.Data;
+using Viralis.Data.Models;
+using Viralis.Services.Interfaces.Classroom;
 
 namespace Viralis.Services.Implementations
 {
@@ -112,6 +113,48 @@ namespace Viralis.Services.Implementations
             });
 
             await db.SaveChangesAsync();
+        }
+
+        public async Task<ClassroomDetailViewModel?> GetDetailAsync(Guid classroomId, Guid userId)
+        {
+            var classroom = await db.Classrooms
+                .Include(c => c.Teachers).ThenInclude(ct => ct.Teacher)
+                .Include(c => c.Students).ThenInclude(cs => cs.Student)
+                .Include(c => c.Assignments) // add this
+                .FirstOrDefaultAsync(c => c.Id == classroomId);
+
+            if (classroom == null) return null;
+
+            bool isTeacher = classroom.Teachers.Any(ct => ct.TeacherId == userId);
+            bool isStudent = classroom.Students.Any(cs => cs.StudentId == userId);
+
+            if (!isTeacher && !isStudent) return null;
+
+            return new ClassroomDetailViewModel
+            {
+                Id = classroom.Id,
+                Name = classroom.Name,
+                Subject = classroom.Subject,
+                JoinCode = classroom.JoinCode,
+                IsTeacher = isTeacher,
+                Teachers = classroom.Teachers.Select(ct => new MemberViewModel
+                {
+                    Id = ct.Teacher.Id,
+                    Email = ct.Teacher.Email!
+                }).ToList(),
+                Students = classroom.Students.Select(cs => new MemberViewModel
+                {
+                    Id = cs.Student.Id,
+                    Email = cs.Student.Email!
+                }).ToList(),
+                Assignments = classroom.Assignments.Select(a => new AssignmentListViewModel // add this
+                {
+                    Id = a.Id,
+                    Title = a.Title,
+                    Description = a.Description,
+                    DueDate = a.DueDate
+                }).OrderByDescending(a => a.DueDate).ToList()
+            };
         }
     }
 }

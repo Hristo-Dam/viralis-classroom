@@ -37,15 +37,19 @@
             @foreach (var classroom in Model)
             {
                 <div class="col">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">@classroom.Name</h5>
-                            <p class="card-text text-muted">@classroom.Subject</p>
-                            <span class="badge @(classroom.IsTeacher ? "bg-primary" : "bg-success")">
-                                @(classroom.IsTeacher ? "Teacher" : "Student")
-                            </span>
+                    <a asp-action="Details" asp-route-id="@classroom.Id" class="classroom-card-link">
+                        <div class="classroom-card">
+                            <div class="classroom-card-header">
+                                <span class="classroom-subject">@classroom.Subject</span>
+                                <h3 class="classroom-name">@classroom.Name</h3>
+                            </div>
+                            <div class="classroom-card-footer">
+                                <span class="classroom-role-badge @(classroom.IsTeacher ? "badge-teacher" : "badge-student")">
+                                    @(classroom.IsTeacher ? "Teacher" : "Student")
+                                </span>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             }
         </div>

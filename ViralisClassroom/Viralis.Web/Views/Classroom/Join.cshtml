@@ -1,0 +1,20 @@
+﻿@model Viralis.Common.ViewModels.Classroom.JoinClassroomViewModel
+
+@{
+    ViewData["Title"] = "Join Classroom";
+}
+
+<div class="container mt-4" style="max-width: 400px">
+    <h2>Join a Classroom</h2>
+
+    <form asp-action="Join" method="post">
+        <div class="mb-3">
+            <label asp-for="JoinCode" class="form-label">Enter Join Code</label>
+            <input asp-for="JoinCode" class="form-control" placeholder="e.g. A1B2C3" />
+            <span asp-validation-for="JoinCode" class="text-danger"></span>
+        </div>
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+        <button type="submit" class="btn btn-success w-100">Join</button>
+        <a asp-action="Index" class="btn btn-link w-100 mt-1">Cancel</a>
+    </form>
+</div>

@@ -7,7 +7,7 @@ namespace Viralis.Data.Seeding
     {
         public static async Task SeedRolesAsync(RoleManager<IdentityRole<Guid>> roleManager)
         {
-            string[] roles = { RoleConstants.Admin, RoleConstants.Teacher, RoleConstants.Student };
+            string[] roles = { RoleConstants.ADMIN, RoleConstants.TEACHER, RoleConstants.STUDENT, RoleConstants.SCHOOL_ADMINISTRATOR };
 
             foreach (var roleName in roles)
             {

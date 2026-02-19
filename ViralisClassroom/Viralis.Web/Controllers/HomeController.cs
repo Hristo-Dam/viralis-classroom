@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Viralis.Common.Constants;
 
 namespace Viralis.Web.Controllers
 {
@@ -8,9 +9,11 @@ namespace Viralis.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            string test = string.Empty;
             if (User.Identity?.IsAuthenticated == true)
             {
+                if (User.IsInRole(RoleConstants.SCHOOL_ADMINISTRATOR))
+                    return RedirectToAction("Index", "SchoolAdmin");
+
                 return RedirectToAction("Index", "Classroom");
             }
 

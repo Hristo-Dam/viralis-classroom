@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Viralis.Common.ViewModels.Classroom
 {
     public class JoinClassroomViewModel
     {
-        public string JoinCode { get; set; }
+        [Required(ErrorMessage = "Please enter a join code")]
+        public string JoinCode { get; set; } = null!;
     }
 }

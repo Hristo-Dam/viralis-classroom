@@ -19,7 +19,7 @@ namespace Viralis.Services.Implementations
         public async Task CreateAsync(CreateClassroomViewModel model, Guid teacherId)
         {
             var teacherRoleId = await db.Roles
-                .Where(r => r.Name == RoleConstants.Teacher)
+                .Where(r => r.Name == RoleConstants.TEACHER)
                 .Select(r => r.Id)
                 .FirstOrDefaultAsync();
 

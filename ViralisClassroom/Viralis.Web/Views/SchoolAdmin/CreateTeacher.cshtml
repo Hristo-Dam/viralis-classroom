@@ -1,0 +1,36 @@
+﻿@model Viralis.Common.ViewModels.SchoolAdmin.CreateTeacherViewModel
+
+@{
+    ViewData["Title"] = "Create Teacher Account";
+}
+
+<div class="container mt-4" style="max-width: 500px">
+    <h2>Create Teacher Account</h2>
+    <p class="text-muted">
+        The teacher will use these credentials to log in.
+        Make sure to share the temporary password with them securely.
+    </p>
+
+    <form asp-action="CreateTeacher" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="form-floating mb-3">
+            <input asp-for="Email" class="form-control" placeholder="teacher@school.com" />
+            <label asp-for="Email"></label>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input asp-for="TemporaryPassword" class="form-control" placeholder="Temporary password" />
+            <label asp-for="TemporaryPassword"></label>
+            <span asp-validation-for="TemporaryPassword" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Create Teacher Account</button>
+        <a asp-action="Index" class="btn btn-link w-100 mt-1">Cancel</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

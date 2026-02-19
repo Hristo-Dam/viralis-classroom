@@ -50,7 +50,6 @@ namespace Viralis.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Student")]
         public async Task<IActionResult> Join(JoinClassroomViewModel model)
         {
             if (!ModelState.IsValid)
@@ -67,6 +66,12 @@ namespace Viralis.Web.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public IActionResult Join()
+        {
+            return View(new JoinClassroomViewModel());
         }
     }
 }

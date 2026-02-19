@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Viralis.Common.Constants;
 using Viralis.Data;
+using Viralis.Data.Constants;
 using Viralis.Data.Models;
+using Viralis.Data.Seeding;
 using Viralis.Services.Implementations;
 using Viralis.Services.Interfaces;
 
@@ -9,7 +12,7 @@ namespace Viralis.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -69,6 +72,22 @@ namespace Viralis.Web
             );
 
             app.MapRazorPages();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var roleManager = scope.ServiceProvider
+                    .GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+                var userManager = scope.ServiceProvider
+                    .GetRequiredService<UserManager<ApplicationUser>>();
+
+                await RoleSeeder.SeedRolesAsync(roleManager);
+
+                var adminUser = await userManager.FindByEmailAsync(UserConstants.AdminEmail);
+                if (adminUser != null && !await userManager.IsInRoleAsync(adminUser, RoleConstants.ADMIN))
+                {
+                    await userManager.AddToRoleAsync(adminUser, RoleConstants.ADMIN);
+                }
+            }
 
             app.Run();
         }

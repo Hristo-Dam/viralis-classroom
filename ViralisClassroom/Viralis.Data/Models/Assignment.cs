@@ -18,4 +18,6 @@ public class Assignment
 
     public ICollection<UserAssignment> AssignedStudents{ get; set; }
         = new List<UserAssignment>();
+
+    public ICollection<AssignmentFile> Files { get; set; } = new List<AssignmentFile>();
 }

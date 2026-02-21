@@ -22,7 +22,7 @@
 
 <div class="container" style="max-width:680px; padding: 2rem 1rem;">
     <div class="assignment-card">
-        <form asp-action="Create" method="post">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
             <input type="hidden" asp-for="ClassroomId" />
 
             <div asp-validation-summary="ModelOnly" class="form-error-summary"
@@ -39,6 +39,12 @@
                 <textarea asp-for="Description" class="form-textarea" rows="6"
                           placeholder="Describe what students need to do..."></textarea>
                 <span asp-validation-for="Description" class="form-field-error"></span>
+            </div>
+
+            <div class="form-field">
+                <label class="form-label">Attach files (optional)</label>
+                <input type="file" asp-for="Files" multiple class="form-input"
+                       style="padding:0.5rem 1rem;" />
             </div>
 
             <div class="form-field">

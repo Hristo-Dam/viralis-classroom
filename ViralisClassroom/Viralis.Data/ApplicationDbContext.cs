@@ -30,6 +30,8 @@ namespace Viralis.Data
             builder.ApplyConfiguration(new UserAssignmentConfiguration());
             builder.ApplyConfiguration(new AssignmentConfiguration());
             builder.ApplyConfiguration(new SchoolAdministratorConfiguration());
+            builder.ApplyConfiguration(new AssignmentFileConfiguration());
+            builder.ApplyConfiguration(new SubmissionFileConfiguration());
 
             base.OnModelCreating(builder);
         }

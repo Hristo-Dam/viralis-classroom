@@ -41,6 +41,26 @@
                 <p class="assignment-description">@Model.Description</p>
             </div>
 
+            @if (Model.AssignmentFiles.Any())
+            {
+                <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border);">
+                    <p class="form-label">Assignment Files</p>
+                    <div style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.5rem;">
+                        @foreach (var file in Model.AssignmentFiles)
+                        {
+                            <a href="@file.FilePath" download="@file.FileName"
+                               style="display:inline-flex; align-items:center; gap:0.4rem;
+                                  background:rgba(79,142,247,0.08); border:1px solid rgba(79,142,247,0.2);
+                                  border-radius:8px; padding:0.4rem 0.85rem;
+                                  color:var(--accent); font-size:0.875rem; text-decoration:none;
+                                  transition: all 0.18s ease;">
+                                📎 @file.FileName
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+
             @if (Model.IsTeacher)
             {
                 <!-- Teacher: Submission overview -->
@@ -70,8 +90,26 @@
                                     <div class="submission-info">
                                         <span class="submission-email">@sub.StudentEmail</span>
                                         <span class="submission-status @(sub.HasSubmitted ? "status-submitted" : "status-missing")">
-                                            @(sub.HasSubmitted ? "Submitted" : "Missing")
+                                            @(sub.HasSubmitted ? $"Submitted {sub.SubmittedOn?.ToString("MMM dd")}" : "Missing")
                                         </span>
+                                        @if (sub.TextContent != null)
+                                        {
+                                            <p style="font-size:0.85rem; color:var(--text-muted); margin:0.3rem 0 0;">
+                                                @sub.TextContent
+                                            </p>
+                                        }
+                                        @if (sub.Files.Any())
+                                        {
+                                            <div style="margin-top:0.4rem; display:flex; flex-wrap:wrap; gap:0.4rem;">
+                                                @foreach (var file in sub.Files)
+                                                {
+                                                    <a href="@file.FilePath" download="@file.FileName"
+                                                       style="font-size:0.8rem; color:var(--accent); text-decoration:none;">
+                                                        📎 @file.FileName
+                                                    </a>
+                                                }
+                                            </div>
+                                        }
                                     </div>
                                     <div class="submission-grade">
                                         @if (sub.Grade.HasValue)
@@ -81,19 +119,19 @@
                                         else if (sub.HasSubmitted)
                                         {
                                             <!-- Grade form -->
-                                            <form asp-action="Grade" method="post"
-                                                  class="grade-form">
-                                                <input type="hidden" name="SubmissionId"
-                                                       value="@sub.SubmissionId" />
-                                                <input type="hidden" name="ClassroomId"
-                                                       value="@Model.ClassroomId" />
-                                                <input type="number" name="Grade"
-                                                       min="0" max="100" placeholder="Grade"
+                                            <form asp-action="Grade" method="post" class="grade-form">
+                                                <input type="hidden" name="SubmissionId" value="@sub.SubmissionId" />
+                                                <input type="hidden" name="AssignmentId" value="@Model.Id" />
+                                                <input type="hidden" name="ClassroomId" value="@Model.ClassroomId" />
+                                                <input type="number" name="Grade" min="0" max="100"
+                                                       value="@sub.Grade" placeholder="Grade"
                                                        class="grade-input" />
                                                 <input type="text" name="Feedback"
-                                                       placeholder="Feedback (optional)"
+                                                       value="@sub.Feedback" placeholder="Feedback (optional)"
                                                        class="feedback-input" />
-                                                <button type="submit" class="grade-btn">Save</button>
+                                                <button type="submit" class="grade-btn">
+                                                    @(sub.Grade.HasValue ? "Update" : "Save")
+                                                </button>
                                             </form>
                                         }
                                     </div>
@@ -110,6 +148,21 @@
         {
             <aside class="assignment-sidebar">
                 <div class="submission-panel">
+                    @if (TempData["Success"] != null)
+                    {
+                        <div style="background:rgba(52,211,153,0.1); border:1px solid rgba(52,211,153,0.3);
+                                border-radius:10px; padding:0.75rem 1rem; margin-bottom:1rem;
+                                color:#34d399; font-size:0.875rem;">
+                            @TempData["Success"]
+                        </div>
+                    }
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="form-error-summary" style="margin-bottom:1rem;">
+                            @TempData["Error"]
+                        </div>
+                    }
+
                     @if (Model.MySubmission != null)
                     {
                         <h4 class="submission-panel-title">Your Submission</h4>
@@ -147,29 +200,52 @@
                                 <p>@Model.MySubmission.TeacherFeedback</p>
                             </div>
                         }
+
+                        @if (!Model.IsOverdue && !Model.MySubmission.Grade.HasValue)
+                        {
+                            <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border);">
+                                <p class="form-label" style="margin-bottom:0.75rem;">Edit your submission</p>
+                                <form asp-action="EditSubmission" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="AssignmentId" value="@Model.Id" />
+                                    <input type="hidden" name="ClassroomId" value="@Model.ClassroomId" />
+                                    <div class="form-field">
+                                        <textarea name="TextContent" class="form-textarea" rows="3"
+                                      placeholder="Update your comment...">@Model.MySubmission.TextContent</textarea>
+                                    </div>
+                                    <div class="form-field">
+                                        <label class="form-label">Add more files</label>
+                                        <input type="file" name="Files" multiple class="form-input"
+                                               style="padding:0.5rem 1rem;" />
+                                    </div>
+                                    <button type="submit" class="btn-primary-action"
+                                            style="width:100%; text-align:center; padding:0.7rem; border:none; cursor:pointer;">
+                                        Update Submission
+                                    </button>
+                                </form>
+                            </div>
+                        }
                     }
                     else
                     {
                         <h4 class="submission-panel-title">Your Work</h4>
 
-                        @if (TempData["Error"] != null)
-                        {
-                            <div class="auth-validation-summary">@TempData["Error"]</div>
-                        }
-
-                        <form asp-action="Submit" method="post" enctype="multipart/form-data">
+                        <form asp-action="Submit" method="post" enctype="multipart/form-data" id="submitForm">
                             <input type="hidden" name="AssignmentId" value="@Model.Id" />
                             <input type="hidden" name="ClassroomId" value="@Model.ClassroomId" />
 
+                            <div id="submit-error" class="form-error-summary" style="display:none;">
+                                Please add a comment or attach at least one file.
+                            </div>
+
                             <div class="form-field">
                                 <label class="form-label">Add a comment (optional)</label>
-                                <textarea name="TextContent" class="form-textarea" rows="3"
+                                <textarea name="TextContent" id="submitComment" class="form-textarea" rows="3"
                                   placeholder="Write something..."></textarea>
                             </div>
 
                             <div class="form-field">
-                                <label class="form-label">Attach files</label>
-                                <input type="file" name="Files" multiple class="form-input"
+                                <label class="form-label">Attach files (optional)</label>
+                                <input type="file" name="Files" id="submitFiles" multiple class="form-input"
                                        style="padding: 0.5rem 1rem;" />
                             </div>
 
@@ -180,9 +256,26 @@
                             </button>
                         </form>
                     }
-                </div>
+                </div>  <!-- closes submission-panel -->
             </aside>
         }
 
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.getElementById('submitForm').addEventListener('submit', function (e) {
+            var comment = document.getElementById('submitComment').value.trim();
+            var files = document.getElementById('submitFiles').files;
+            var errorBox = document.getElementById('submit-error');
+
+            if (comment === '' && files.length === 0) {
+                e.preventDefault();
+                errorBox.style.display = 'block';
+            } else {
+                errorBox.style.display = 'none';
+            }
+        });
+    </script>
+}

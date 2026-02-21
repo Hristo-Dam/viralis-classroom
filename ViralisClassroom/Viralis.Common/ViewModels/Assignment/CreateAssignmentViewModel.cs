@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace Viralis.Common.ViewModels.Assignment
 {
@@ -15,5 +16,6 @@ namespace Viralis.Common.ViewModels.Assignment
         [Required]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}", ApplyFormatInEditMode = true)]
         public DateTime DueDate { get; set; } = DateTime.Now.AddDays(7);
+        public List<IFormFile>? Files { get; set; }
     }
 }

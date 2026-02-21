@@ -8,18 +8,16 @@ namespace Viralis.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<Submission> builder)
         {
-            builder
-                .HasMany(s => s.Files)
-                .WithOne(f => f.Submission)
-                .HasForeignKey(f => f.SubmissionId)
-                .OnDelete(DeleteBehavior.Restrict);
+            builder.HasKey(s => s.Id);
 
-            builder
-                .Property(s => s.Links)
-                .HasConversion(
-                    v => string.Join(',', v ?? new List<string>()),
-                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
-                );
+            builder.Property(s => s.TextContent)
+                .IsRequired(false);
+
+            builder.Property(s => s.Grade)
+                .IsRequired(false);
+
+            builder.Property(s => s.TeacherFeedback)
+                .IsRequired(false);
         }
     }
 }

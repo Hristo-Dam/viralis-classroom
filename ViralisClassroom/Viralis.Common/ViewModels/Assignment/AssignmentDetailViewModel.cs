@@ -15,6 +15,8 @@
 
         // Teacher view
         public List<StudentSubmissionViewModel> Submissions { get; set; } = new();
+
+        public List<SubmissionFileViewModel> AssignmentFiles { get; set; } = new();
     }
     public class SubmissionViewModel
     {
@@ -32,7 +34,16 @@
         public string StudentEmail { get; set; } = null!;
         public bool HasSubmitted { get; set; }
         public Guid? SubmissionId { get; set; }
+        public string? TextContent { get; set; }
         public double? Grade { get; set; }
+        public string? Feedback { get; set; }
         public DateTime? SubmittedOn { get; set; }
+        public List<SubmissionFileViewModel> Files { get; set; } = new();
+    }
+
+    public class SubmissionFileViewModel
+    {
+        public string FileName { get; set; } = null!;
+        public string FilePath { get; set; } = null!;
     }
 }

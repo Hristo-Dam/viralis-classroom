@@ -9,5 +9,6 @@ namespace Viralis.Services.Interfaces.Assignments
         Task<AssignmentDetailViewModel?> GetDetailAsync(Guid assignmentId, Guid userId, bool isTeacher);
         Task SubmitAsync(SubmitAssignmentViewModel model, Guid studentId);
         Task GradeAsync(GradeSubmissionViewModel model, Guid teacherId);
+        Task EditSubmissionAsync(SubmitAssignmentViewModel model, Guid studentId);
     }
 }

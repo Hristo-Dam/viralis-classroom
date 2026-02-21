@@ -51,6 +51,7 @@ namespace Viralis.Web.Controllers
             try
             {
                 await _assignmentService.SubmitAsync(model, CurrentUserId);
+                TempData["Success"] = "Assignment submitted successfully!";
             }
             catch (Exception ex)
             {
@@ -65,10 +66,36 @@ namespace Viralis.Web.Controllers
         [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> Grade(GradeSubmissionViewModel model)
         {
-            await _assignmentService.GradeAsync(model, CurrentUserId);
+            try
+            {
+                await _assignmentService.GradeAsync(model, CurrentUserId);
+                TempData["Success"] = "Grade saved successfully!";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+            }
 
             return RedirectToAction(nameof(Details),
-                new { id = model.SubmissionId, classroomId = model.ClassroomId });
+                new { id = model.AssignmentId, classroomId = model.ClassroomId });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> EditSubmission(SubmitAssignmentViewModel model)
+        {
+            try
+            {
+                await _assignmentService.EditSubmissionAsync(model, CurrentUserId);
+                TempData["Success"] = "Submission updated successfully!";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+            }
+
+            return RedirectToAction(nameof(Details),
+                new { id = model.AssignmentId, classroomId = model.ClassroomId });
         }
     }
 }

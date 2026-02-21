@@ -118,9 +118,13 @@ namespace Viralis.Services.Implementations
         public async Task<ClassroomDetailViewModel?> GetDetailAsync(Guid classroomId, Guid userId)
         {
             var classroom = await db.Classrooms
-                .Include(c => c.Teachers).ThenInclude(ct => ct.Teacher)
-                .Include(c => c.Students).ThenInclude(cs => cs.Student)
-                .Include(c => c.Assignments) // add this
+                .Include(c => c.Teachers)
+                    .ThenInclude(ct => ct.Teacher)
+                .Include(c => c.Students)
+                    .ThenInclude(cs => cs.Student)
+                .Include(c => c.Assignments)
+                    .ThenInclude(a => a.AssignedStudents)
+                        .ThenInclude(ua => ua.Submission)
                 .FirstOrDefaultAsync(c => c.Id == classroomId);
 
             if (classroom == null) return null;
@@ -147,13 +151,18 @@ namespace Viralis.Services.Implementations
                     Id = cs.Student.Id,
                     Email = cs.Student.Email!
                 }).ToList(),
-                Assignments = classroom.Assignments.Select(a => new AssignmentListViewModel // add this
+                Assignments = classroom.Assignments
+                .Select(a => new AssignmentListViewModel
                 {
                     Id = a.Id,
                     Title = a.Title,
                     Description = a.Description,
-                    DueDate = a.DueDate
-                }).OrderByDescending(a => a.DueDate).ToList()
+                    DueDate = a.DueDate,
+                    HasSubmitted = a.AssignedStudents
+                        .Any(ua => ua.StudentId == userId && ua.Submission != null)
+                })
+                .OrderByDescending(a => a.DueDate)
+                .ToList()
             };
         }
     }

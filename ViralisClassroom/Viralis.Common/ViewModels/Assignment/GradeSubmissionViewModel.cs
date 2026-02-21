@@ -5,6 +5,7 @@ namespace Viralis.Common.ViewModels.Assignment
     public class GradeSubmissionViewModel
     {
         public Guid SubmissionId { get; set; }
+        public Guid AssignmentId { get; set; }
         public Guid ClassroomId { get; set; }
 
         [Range(0, 100)]

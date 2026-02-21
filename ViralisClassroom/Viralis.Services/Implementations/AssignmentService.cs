@@ -20,11 +20,10 @@ namespace Viralis.Services.Implementations
 
         public async Task CreateAsync(CreateAssignmentViewModel model, Guid teacherId)
         {
-            // Get all students currently in the classroom
             var studentIds = await _db.ClassroomStudents
-                .Where(cs => cs.ClassroomId == model.ClassroomId)
-                .Select(cs => cs.StudentId)
-                .ToListAsync();
+               .Where(cs => cs.ClassroomId == model.ClassroomId)
+               .Select(cs => cs.StudentId)
+               .ToListAsync();
 
             var assignment = new Assignment
             {
@@ -35,7 +34,6 @@ namespace Viralis.Services.Implementations
                 AssigningTeacherId = teacherId
             };
 
-            // Create a UserAssignment for every current student
             foreach (var studentId in studentIds)
             {
                 assignment.AssignedStudents.Add(new UserAssignment
@@ -44,8 +42,33 @@ namespace Viralis.Services.Implementations
                 });
             }
 
+            // Handle files BEFORE saving — EF will handle the foreign key automatically
+            if (model.Files != null && model.Files.Any())
+            {
+                var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads", "assignments");
+                Directory.CreateDirectory(uploadsFolder);
+
+                foreach (var file in model.Files)
+                {
+                    if (file.Length == 0) continue;
+
+                    var uniqueName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
+                    var filePath = Path.Combine(uploadsFolder, uniqueName);
+
+                    using var stream = new FileStream(filePath, FileMode.Create);
+                    await file.CopyToAsync(stream);
+
+                    assignment.Files.Add(new AssignmentFile
+                    {
+                        FileName = file.FileName,
+                        FilePath = $"/uploads/assignments/{uniqueName}",
+                        FileSize = file.Length
+                    });
+                }
+            }
+
             _db.Assignments.Add(assignment);
-            await _db.SaveChangesAsync();
+            await _db.SaveChangesAsync(); // single save for everything
         }
 
         public async Task<List<AssignmentListViewModel>> GetForClassroomAsync(Guid classroomId, Guid userId, bool isTeacher)
@@ -74,6 +97,7 @@ namespace Viralis.Services.Implementations
         public async Task<AssignmentDetailViewModel?> GetDetailAsync(Guid assignmentId, Guid userId, bool isTeacher)
         {
             var assignment = await _db.Assignments
+                .Include(a => a.Files)
                 .Include(a => a.AssignedStudents)
                     .ThenInclude(ua => ua.Student)
                 .Include(a => a.AssignedStudents)
@@ -90,7 +114,12 @@ namespace Viralis.Services.Implementations
                 Title = assignment.Title,
                 Description = assignment.Description,
                 DueDate = assignment.DueDate,
-                IsTeacher = isTeacher
+                IsTeacher = isTeacher,
+                AssignmentFiles = assignment.Files.Select(f => new SubmissionFileViewModel  // add this
+                {
+                    FileName = f.FileName,
+                    FilePath = f.FilePath
+                }).ToList()
             };
 
             if (isTeacher)
@@ -102,8 +131,15 @@ namespace Viralis.Services.Implementations
                         StudentEmail = ua.Student.Email!,
                         HasSubmitted = ua.Submission != null,
                         SubmissionId = ua.Submission?.Id,
+                        TextContent = ua.Submission?.TextContent,
                         Grade = ua.Submission?.Grade,
-                        SubmittedOn = ua.Submission?.SubmittedOn
+                        Feedback = ua.Submission?.TeacherFeedback,
+                        SubmittedOn = ua.Submission?.SubmittedOn,
+                        Files = ua.Submission?.Files.Select(f => new SubmissionFileViewModel
+                        {
+                            FileName = f.FileName,
+                            FilePath = f.FilePath
+                        }).ToList() ?? new()
                     }).ToList();
             }
             else
@@ -130,6 +166,12 @@ namespace Viralis.Services.Implementations
 
         public async Task SubmitAsync(SubmitAssignmentViewModel model, Guid studentId)
         {
+            bool hasComment = !string.IsNullOrWhiteSpace(model.TextContent);
+            bool hasFiles = model.Files != null && model.Files.Any(f => f.Length > 0);
+
+            if (!hasComment && !hasFiles)
+                throw new InvalidOperationException("Please add a comment or attach at least one file.");
+
             var ua = await _db.UserAssignments
                 .Include(ua => ua.Submission)
                 .FirstOrDefaultAsync(ua =>
@@ -139,8 +181,15 @@ namespace Viralis.Services.Implementations
             if (ua == null)
                 throw new InvalidOperationException("Assignment not found for this student.");
 
-            if (ua.Submission != null)
-                throw new InvalidOperationException("Already submitted.");
+            // Check if already submitted
+            bool alreadySubmitted = await _db.Submissions
+                .AnyAsync(s => s.AssignmentId == model.AssignmentId && s.StudentId == studentId);
+
+            if (alreadySubmitted)
+                throw new InvalidOperationException("You have already submitted this assignment.");
+
+            //if (ua.Submission != null)
+            //    throw new InvalidOperationException("Already submitted.");
 
             var submission = new Submission
             {
@@ -150,16 +199,16 @@ namespace Viralis.Services.Implementations
             };
 
             // Handle file uploads
-            if (model.Files != null && model.Files.Any())
+            if (hasFiles)
             {
                 var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads", "submissions");
                 Directory.CreateDirectory(uploadsFolder);
 
-                foreach (var file in model.Files)
+                foreach (var file in model.Files!)
                 {
                     if (file.Length == 0) continue;
 
-                    var uniqueName = $"{Guid.NewGuid()}_{file.FileName}";
+                    var uniqueName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
                     var filePath = Path.Combine(uploadsFolder, uniqueName);
 
                     using var stream = new FileStream(filePath, FileMode.Create);
@@ -167,6 +216,7 @@ namespace Viralis.Services.Implementations
 
                     submission.Files.Add(new SubmissionFile
                     {
+                        Id = Guid.NewGuid(),
                         FileName = file.FileName,
                         FilePath = $"/uploads/submissions/{uniqueName}",
                         FileSize = file.Length
@@ -174,7 +224,8 @@ namespace Viralis.Services.Implementations
                 }
             }
 
-            ua.Submission = submission;
+            // Add directly to DbContext instead of through navigation property
+            _db.Submissions.Add(submission);
             await _db.SaveChangesAsync();
         }
 
@@ -186,8 +237,58 @@ namespace Viralis.Services.Implementations
             if (submission == null)
                 throw new InvalidOperationException("Submission not found.");
 
-            submission.Grade = model.Grade;
+            // Clamp grade to 0-100 regardless of what was submitted
+            submission.Grade = Math.Clamp(model.Grade, 0, 100);
             submission.TeacherFeedback = model.Feedback;
+
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task EditSubmissionAsync(SubmitAssignmentViewModel model, Guid studentId)
+        {
+            var submission = await _db.Submissions
+                .Include(s => s.Files)
+                .FirstOrDefaultAsync(s =>
+                    s.AssignmentId == model.AssignmentId &&
+                    s.StudentId == studentId);
+
+            if (submission == null)
+                throw new InvalidOperationException("Submission not found.");
+
+            bool hasComment = !string.IsNullOrWhiteSpace(model.TextContent);
+            bool hasFiles = model.Files != null && model.Files.Any(f => f.Length > 0);
+
+            if (!hasComment && !hasFiles)
+                throw new InvalidOperationException("Please add a comment or attach at least one file.");
+
+            submission.TextContent = model.TextContent;
+            submission.SubmittedOn = DateTime.UtcNow;
+
+            // Add new files if provided
+            if (hasFiles)
+            {
+                var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads", "submissions");
+                Directory.CreateDirectory(uploadsFolder);
+
+                foreach (var file in model.Files!)
+                {
+                    if (file.Length == 0) continue;
+
+                    var uniqueName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
+                    var filePath = Path.Combine(uploadsFolder, uniqueName);
+
+                    using var stream = new FileStream(filePath, FileMode.Create);
+                    await file.CopyToAsync(stream);
+
+                    submission.Files.Add(new SubmissionFile
+                    {
+                        Id = Guid.NewGuid(),
+                        FileName = file.FileName,
+                        FilePath = $"/uploads/submissions/{uniqueName}",
+                        FileSize = file.Length
+                    });
+                }
+            }
 
             await _db.SaveChangesAsync();
         }

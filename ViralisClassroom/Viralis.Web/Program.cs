@@ -81,6 +81,12 @@ namespace Viralis.Web
 
             using (var scope = app.Services.CreateScope())
             {
+                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                db.Database.Migrate(); // applies any pending migrations automatically
+            }
+
+            using (var scope = app.Services.CreateScope())
+            {
                 var roleManager = scope.ServiceProvider
                     .GetRequiredService<RoleManager<IdentityRole<Guid>>>();
                 var userManager = scope.ServiceProvider
@@ -93,12 +99,6 @@ namespace Viralis.Web
                 {
                     await userManager.AddToRoleAsync(adminUser, RoleConstants.ADMIN);
                 }
-            }
-
-            using (var scope = app.Services.CreateScope())
-            {
-                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                db.Database.Migrate(); // applies any pending migrations automatically
             }
 
             app.Run();

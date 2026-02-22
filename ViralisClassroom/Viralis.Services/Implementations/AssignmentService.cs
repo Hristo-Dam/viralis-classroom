@@ -77,7 +77,7 @@ namespace Viralis.Services.Implementations
                 .Where(a => a.ClassroomId == classroomId)
                 .Include(a => a.AssignedStudents)
                     .ThenInclude(ua => ua.Submission)
-                .OrderByDescending(a => a.DueDate)
+                .OrderByDescending(a => a.AssignmentDate)
                 .ToListAsync();
 
             return assignments.Select(a => new AssignmentListViewModel
@@ -86,6 +86,7 @@ namespace Viralis.Services.Implementations
                 Title = a.Title,
                 Description = a.Description,
                 DueDate = a.DueDate,
+                AssignmentDate = a.AssignmentDate,
                 HasSubmitted = !isTeacher && a.AssignedStudents
                     .Any(ua => ua.StudentId == userId && ua.Submission != null),
                 SubmissionCount = isTeacher
@@ -114,8 +115,9 @@ namespace Viralis.Services.Implementations
                 Title = assignment.Title,
                 Description = assignment.Description,
                 DueDate = assignment.DueDate,
+                AssignmentDate = assignment.AssignmentDate,
                 IsTeacher = isTeacher,
-                AssignmentFiles = assignment.Files.Select(f => new SubmissionFileViewModel  // add this
+                AssignmentFiles = assignment.Files.Select(f => new SubmissionFileViewModel
                 {
                     FileName = f.FileName,
                     FilePath = f.FilePath
@@ -166,11 +168,18 @@ namespace Viralis.Services.Implementations
 
         public async Task SubmitAsync(SubmitAssignmentViewModel model, Guid studentId)
         {
+            var fileCount = model.Files?.Count ?? 0;
+            Console.WriteLine($"Files received: {fileCount}");
+            Console.WriteLine($"TextContent: '{model.TextContent}'");
+
             bool hasComment = !string.IsNullOrWhiteSpace(model.TextContent);
             bool hasFiles = model.Files != null && model.Files.Any(f => f.Length > 0);
 
             if (!hasComment && !hasFiles)
                 throw new InvalidOperationException("Please add a comment or attach at least one file.");
+
+            if (!hasComment)
+                model.TextContent = null;
 
             var ua = await _db.UserAssignments
                 .Include(ua => ua.Submission)

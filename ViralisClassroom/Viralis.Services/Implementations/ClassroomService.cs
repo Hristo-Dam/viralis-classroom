@@ -158,6 +158,7 @@ namespace Viralis.Services.Implementations
                     Title = a.Title,
                     Description = a.Description,
                     DueDate = a.DueDate,
+                    AssignmentDate = a.AssignmentDate,
                     HasSubmitted = a.AssignedStudents
                         .Any(ua => ua.StudentId == userId && ua.Submission != null)
                 })

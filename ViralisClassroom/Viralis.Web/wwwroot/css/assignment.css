@@ -400,3 +400,259 @@
         border-color: var(--accent);
         color: var(--accent);
     }
+
+/* ─── File Upload Zone ───────────────────────────────────── */
+.file-upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: 14px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+}
+
+    .file-upload-zone::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at 50% 120%, rgba(79,142,247,0.06) 0%, transparent 70%);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        pointer-events: none;
+    }
+
+    .file-upload-zone:hover::before,
+    .file-upload-zone.dragover::before {
+        opacity: 1;
+    }
+
+    .file-upload-zone:hover,
+    .file-upload-zone.dragover {
+        border-color: var(--accent);
+        border-style: solid;
+        background: rgba(79,142,247,0.03);
+    }
+
+    .file-upload-zone.dragover {
+        transform: scale(1.01);
+        box-shadow: 0 0 0 4px rgba(79,142,247,0.1);
+    }
+
+    .file-upload-zone input[type="file"] {
+        position: absolute !important;
+        inset: 0 !important;
+        opacity: 0 !important;
+        cursor: pointer !important;
+        width: 100% !important;
+        height: 100% !important;
+        z-index: 2;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .file-upload-icon {
+        font-size: 2rem;
+        margin-bottom: 0.6rem;
+        display: block;
+        transition: transform 0.2s ease;
+        pointer-events: none;
+    }
+
+    .file-upload-text {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        margin: 0;
+        line-height: 1.5;
+        pointer-events: none;
+    }
+
+    .file-upload-hint {
+        font-size: 0.75rem;
+        color: #a0aec0;
+        margin: 0.35rem 0 0;
+        pointer-events: none;
+    }
+
+.file-upload-icon {
+    font-size: 2rem;
+    margin-bottom: 0.6rem;
+    display: block;
+    transition: transform 0.2s ease;
+}
+
+.file-upload-zone:hover .file-upload-icon,
+.file-upload-zone.dragover .file-upload-icon {
+    transform: translateY(-3px);
+}
+
+.file-upload-text {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+    .file-upload-text span {
+        color: var(--accent);
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+    }
+
+.file-upload-hint {
+    font-size: 0.75rem;
+    color: #a0aec0;
+    margin: 0.35rem 0 0;
+}
+
+/* ─── File Chips ─────────────────────────────────────────── */
+.file-chips {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.file-chip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.6rem 0.85rem;
+    font-size: 0.875rem;
+    color: var(--text);
+    transition: border-color 0.15s ease;
+    gap: 0.5rem;
+}
+
+    .file-chip:hover {
+        border-color: rgba(79,142,247,0.3);
+    }
+
+.file-chip-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    overflow: hidden;
+    flex: 1;
+    min-width: 0;
+}
+
+.file-chip-name-text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.file-chip-size {
+    color: #a0aec0;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+    background: var(--bg);
+    padding: 0.1rem 0.45rem;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+}
+
+.file-chip-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.file-chip-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #cbd5e0;
+    font-size: 0.8rem;
+    line-height: 1;
+    padding: 0.25rem;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+}
+
+    .file-chip-remove:hover {
+        color: #fff;
+        background: #fc8181;
+    }
+
+/* ─── Submission Edit Toggle ─────────────────────────────── */
+.submission-view {
+}
+
+.submission-edit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.6rem;
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s ease;
+}
+
+    .submission-edit-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: rgba(79,142,247,0.05);
+    }
+
+.submission-edit-form {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    display: none;
+}
+
+    .submission-edit-form.open {
+        display: block;
+    }
+
+.submission-edit-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+    .submission-edit-header p {
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: var(--text);
+        margin: 0;
+    }
+
+.submission-edit-cancel {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.15s;
+}
+
+    .submission-edit-cancel:hover {
+        color: #fc8181;
+    }

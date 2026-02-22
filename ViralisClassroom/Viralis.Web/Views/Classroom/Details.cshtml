@@ -101,7 +101,8 @@
                                         <p class="stream-card-type">Assignment</p>
                                         <p class="stream-card-title">@assignment.Title</p>
                                         <p class="stream-card-meta">
-                                            Due @assignment.DueDate.ToString("MMM dd, yyyy 'at' HH:mm")
+                                            Posted @assignment.AssignmentDate.ToString("MMM dd, yyyy 'at' HH:mm")
+                                            · Due @assignment.DueDate.ToString("MMM dd, yyyy")
                                             @if (assignment.IsOverdue)
                                             {
                                                 <span class="stream-overdue"> · Overdue</span>

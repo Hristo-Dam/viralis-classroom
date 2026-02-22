@@ -43,8 +43,14 @@
 
             <div class="form-field">
                 <label class="form-label">Attach files (optional)</label>
-                <input type="file" asp-for="Files" multiple class="form-input"
-                       style="padding:0.5rem 1rem;" />
+                <div class="file-upload-zone" id="createDropZone">
+                    <input type="file" id="createFileInput" name="Files" multiple accept="*/*" />
+                    <div class="file-upload-icon">📎</div>
+                    <p class="file-upload-text">
+                        <span>Click to add files</span> or drag and drop
+                    </p>
+                </div>
+                <div class="file-chips" id="createFileChips"></div>
             </div>
 
             <div class="form-field">
@@ -70,4 +76,7 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        createFileManager('createFileInput', 'createFileChips');
+    </script>
 }

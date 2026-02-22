@@ -7,6 +7,7 @@
         public string Title { get; set; } = null!;
         public string Description { get; set; } = null!;
         public DateTime DueDate { get; set; }
+        public DateTime AssignmentDate { get; set; }
         public bool IsOverdue => DateTime.UtcNow > DueDate;
         public bool IsTeacher { get; set; }
 

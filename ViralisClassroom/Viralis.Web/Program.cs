@@ -95,6 +95,12 @@ namespace Viralis.Web
                 }
             }
 
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                db.Database.Migrate(); // applies any pending migrations automatically
+            }
+
             app.Run();
         }
     }

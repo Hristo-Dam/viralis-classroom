@@ -136,7 +136,6 @@
     </div>
 
     <!-- Assignments Tab -->
-    <!-- Assignments Tab -->
     <div class="tab-content" id="tab-assignments">
         @if (Model.IsTeacher)
         {
@@ -230,11 +229,46 @@
         </div>
     </div>
 
-    <!-- Chat Tab (placeholder for Phase 3) -->
+    <!-- Chat Tab -->
     <div class="tab-content" id="tab-chat">
-        <div class="empty-state">
-            <div class="empty-icon">💬</div>
-            <p>Chat coming soon.</p>
+        <div class="chat-layout">
+            <div class="chat-messages" id="chatMessages">
+                @if (!Model.RecentMessages.Any())
+                {
+                    <div class="empty-state" id="chatEmpty">
+                        <div class="empty-icon">💬</div>
+                        <p>No messages yet. Say hello!</p>
+                    </div>
+                }
+                else
+                {
+                    foreach (var msg in Model.RecentMessages)
+                    {
+                        <div class="chat-message @(msg.IsOwn ? "own" : "")">
+                            @if (!msg.IsOwn)
+                            {
+                                <div class="chat-avatar">@msg.SenderInitial</div>
+                            }
+                            <div class="chat-bubble-wrap">
+                                @if (!msg.IsOwn)
+                                {
+                                    <span class="chat-sender">@msg.SenderEmail</span>
+                                }
+                                <div class="chat-bubble">@msg.Content</div>
+                                <span class="chat-time">@msg.SentAt</span>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+
+            <div class="chat-input-area">
+                <textarea id="chatInput" class="chat-input" rows="1"
+                          placeholder="Type a message..." maxlength="750"></textarea>
+                <button id="chatSend" class="chat-send-btn">
+                    ➤
+                </button>
+            </div>
         </div>
     </div>
 
@@ -250,5 +284,13 @@
                 document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
             });
         });
+
+        window.chatConfig = {
+            classroomId: '@Model.Id',
+            currentUserEmail: '@User.Identity!.Name'
+        };
+
     </script>
+
+    <script src="~/js/chat.js"></script>
 }

@@ -12,6 +12,7 @@ namespace Viralis.Common.ViewModels.Classroom
         public List<MemberViewModel> Teachers { get; set; } = new();
         public List<MemberViewModel> Students { get; set; } = new();
         public List<AssignmentListViewModel> Assignments { get; set; } = new();
+        public List<ChatMessageViewModel> RecentMessages { get; set; } = new();
     }
 
     public class MemberViewModel

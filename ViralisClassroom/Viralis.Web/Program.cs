@@ -8,6 +8,7 @@ using Viralis.Data.Seeding;
 using Viralis.Services.Implementations;
 using Viralis.Services.Interfaces.Assignments;
 using Viralis.Services.Interfaces.Classroom;
+using Viralis.Web.Hubs;
 
 namespace Viralis.Web
 {
@@ -45,6 +46,7 @@ namespace Viralis.Web
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<IClassroomService, ClassroomService>();
             builder.Services.AddScoped<IAssignmentService, AssignmentService>();
+            builder.Services.AddSignalR();
 
             var app = builder.Build();
 
@@ -67,6 +69,8 @@ namespace Viralis.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.MapHub<ChatHub>("/chatHub");
 
             app.MapControllerRoute(
                 name: "default",

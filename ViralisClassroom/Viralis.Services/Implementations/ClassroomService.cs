@@ -134,6 +134,13 @@ namespace Viralis.Services.Implementations
 
             if (!isTeacher && !isStudent) return null;
 
+            var messages = await db.Messages
+                .Where(m => m.ClassroomId == classroomId)
+                .Include(m => m.Sender)
+                .OrderByDescending(m => m.SentAt)
+                .Take(50)
+                .ToListAsync();
+
             return new ClassroomDetailViewModel
             {
                 Id = classroom.Id,
@@ -141,29 +148,42 @@ namespace Viralis.Services.Implementations
                 Subject = classroom.Subject,
                 JoinCode = classroom.JoinCode,
                 IsTeacher = isTeacher,
-                Teachers = classroom.Teachers.Select(ct => new MemberViewModel
-                {
-                    Id = ct.Teacher.Id,
-                    Email = ct.Teacher.Email!
-                }).ToList(),
-                Students = classroom.Students.Select(cs => new MemberViewModel
-                {
-                    Id = cs.Student.Id,
-                    Email = cs.Student.Email!
-                }).ToList(),
+                Teachers = classroom.Teachers
+                    .Select(ct => new MemberViewModel
+                    {
+                        Id = ct.Teacher.Id,
+                        Email = ct.Teacher.Email!
+                    }).ToList(),
+                Students = classroom.Students
+                    .Select(cs => new MemberViewModel
+                    {
+                        Id = cs.Student.Id,
+                        Email = cs.Student.Email!
+                    }).ToList(),
                 Assignments = classroom.Assignments
-                .Select(a => new AssignmentListViewModel
-                {
-                    Id = a.Id,
-                    Title = a.Title,
-                    Description = a.Description,
-                    DueDate = a.DueDate,
-                    AssignmentDate = a.AssignmentDate,
-                    HasSubmitted = a.AssignedStudents
-                        .Any(ua => ua.StudentId == userId && ua.Submission != null)
-                })
-                .OrderByDescending(a => a.DueDate)
-                .ToList()
+                    .Select(a => new AssignmentListViewModel
+                    {
+                        Id = a.Id,
+                        Title = a.Title,
+                        Description = a.Description,
+                        DueDate = a.DueDate,
+                        AssignmentDate = a.AssignmentDate,
+                        HasSubmitted = a.AssignedStudents
+                            .Any(ua => ua.StudentId == userId && ua.Submission != null)
+                    })
+                    .OrderByDescending(a => a.DueDate)
+                    .ToList(),
+                RecentMessages = messages
+                    .OrderBy(m => m.SentAt)
+                    .Select(m => new ChatMessageViewModel
+                    {
+                        Id = m.Id,
+                        SenderEmail = m.Sender.Email!,
+                        SenderInitial = m.Sender.Email!.Substring(0, 1).ToUpper(),
+                        Content = m.Content,
+                        SentAt = m.SentAt.ToString("HH:mm"),
+                        IsOwn = m.SenderId == userId
+                    }).ToList()
             };
         }
     }

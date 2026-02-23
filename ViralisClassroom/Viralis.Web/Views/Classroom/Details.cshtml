@@ -231,6 +231,55 @@
 
     <!-- Chat Tab -->
     <div class="tab-content" id="tab-chat">
+
+        <!-- ── Incoming Call Alert (shown as a toast/popup when someone starts a call) ── -->
+        <div id="incomingCallAlert">
+            <div class="incoming-call-icon">📞</div>
+            <span id="incomingCallerLabel">Someone is calling...</span>
+            <div class="incoming-call-actions">
+                <button id="acceptCallBtn">✅ Join</button>
+                <button id="declineCallBtn">✕ Dismiss</button>
+            </div>
+        </div>
+
+        <!-- ── Start Call Button (shown when no call is active) ── -->
+        <div style="margin-bottom: 1rem;">
+            <button id="startCallBtn">📹 Start Video Call</button>
+        </div>
+
+        <!-- ── Video Call Panel (hidden until a call starts) ── -->
+        <div id="videoCallPanel">
+            <div class="video-grid">
+
+                <!-- Local video (your own camera) -->
+                <div class="video-wrapper">
+                    <video id="localVideo" autoplay muted playsinline></video>
+                    <span class="video-label">You</span>
+                </div>
+
+                <!-- Remote video (the other person's camera) -->
+                <div class="video-wrapper">
+                    <video id="remoteVideo" autoplay playsinline></video>
+                    <!-- Placeholder shown while waiting for the remote stream -->
+                    <div class="video-placeholder">
+                        <span class="video-placeholder-icon">👤</span>
+                        <span>Waiting for others to join...</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Call controls toolbar -->
+            <div class="call-toolbar">
+                <button id="muteBtn" class="call-control-btn">🎤 Mute</button>
+                <button id="cameraBtn" class="call-control-btn">📹 Hide Camera</button>
+                <button id="endCallBtn" class="call-control-btn">📵 End Call</button>
+            </div>
+
+            <!-- Status line (shows "Calling...", "Connected", error messages, etc.) -->
+            <div id="callStatus"></div>
+        </div>
+
         <div class="chat-layout">
             <div class="chat-messages" id="chatMessages">
                 @if (!Model.RecentMessages.Any())
@@ -290,7 +339,13 @@
             currentUserEmail: '@User.Identity!.Name'
         };
 
+        window.chatConfig = {
+            classroomId: '@Model.Id.ToString()',
+            currentUserEmail: '@User.Identity!.Name'
+        };
+
     </script>
 
     <script src="~/js/chat.js"></script>
+    <script src="~/js/videocall.js"></script>
 }

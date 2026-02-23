@@ -1,0 +1,269 @@
+﻿/* ─── videocall.css ─────────────────────────────────────────────────────────
+   Styles for the WebRTC video call panel.
+   Designed to match the existing Viralis dark theme (--accent: #4f8ef7).
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* ── Start Call Button ───────────────────────────────────────────────────── */
+#startCallBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(79, 142, 247, 0.12);
+    border: 1.5px solid rgba(79, 142, 247, 0.35);
+    border-radius: 10px;
+    color: #4f8ef7;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.55rem 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+    #startCallBtn:hover {
+        background: rgba(79, 142, 247, 0.2);
+        border-color: rgba(79, 142, 247, 0.6);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(79, 142, 247, 0.2);
+    }
+
+/* ── Incoming Call Alert ─────────────────────────────────────────────────── */
+#incomingCallAlert {
+    display: none;
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1050;
+    background: #1a2744;
+    border: 1px solid rgba(79, 142, 247, 0.4);
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    min-width: 300px;
+    animation: slideInRight 0.3s ease;
+}
+
+    #incomingCallAlert.active {
+        display: block;
+    }
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.incoming-call-icon {
+    font-size: 2rem;
+    animation: ring 1s ease infinite;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+
+@keyframes ring {
+    0%, 100% {
+        transform: rotate(-10deg);
+    }
+
+    50% {
+        transform: rotate(10deg);
+    }
+}
+
+#incomingCallerLabel {
+    display: block;
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.incoming-call-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+#acceptCallBtn {
+    flex: 1;
+    background: #34d399;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0.5rem 0;
+    cursor: pointer;
+    transition: background 0.18s ease;
+}
+
+    #acceptCallBtn:hover {
+        background: #10b981;
+    }
+
+#declineCallBtn {
+    flex: 1;
+    background: rgba(252, 129, 129, 0.15);
+    border: 1px solid rgba(252, 129, 129, 0.3);
+    border-radius: 8px;
+    color: #fc8181;
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0.5rem 0;
+    cursor: pointer;
+    transition: all 0.18s ease;
+}
+
+    #declineCallBtn:hover {
+        background: rgba(252, 129, 129, 0.25);
+    }
+
+/* ── Video Call Panel ────────────────────────────────────────────────────── */
+#videoCallPanel {
+    display: none;
+    flex-direction: column;
+    background: #0a0e17;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+    #videoCallPanel.active {
+        display: flex;
+    }
+
+/* ── Video Grid ──────────────────────────────────────────────────────────── */
+.video-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: #0a0e17;
+    min-height: 320px;
+}
+
+@media (max-width: 600px) {
+    .video-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.video-wrapper {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #111827;
+    aspect-ratio: 16 / 9;
+}
+
+    .video-wrapper video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+/* "You" label overlay on the local video */
+.video-label {
+    position: absolute;
+    bottom: 0.5rem;
+    left: 0.6rem;
+    background: rgba(0, 0, 0, 0.55);
+    color: #e2e8f0;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.2rem 0.55rem;
+    border-radius: 6px;
+    letter-spacing: 0.3px;
+}
+
+/* Placeholder shown when remote video isn't connected yet */
+.video-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #8892a4;
+    font-size: 0.875rem;
+    gap: 0.5rem;
+}
+
+.video-placeholder-icon {
+    font-size: 2.5rem;
+    opacity: 0.4;
+}
+
+/* Hide the placeholder once remote video starts streaming */
+#remoteVideo:not([srcObject=""]) + .video-placeholder,
+#remoteVideo.has-stream + .video-placeholder {
+    display: none;
+}
+
+/* ── Call Toolbar ────────────────────────────────────────────────────────── */
+.call-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    background: #111827;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    flex-wrap: wrap;
+}
+
+.call-control-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #e2e8f0;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding: 0.45rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.18s ease;
+}
+
+    .call-control-btn:hover {
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* Active state for muted / camera off */
+    .call-control-btn.control-active {
+        background: rgba(252, 129, 129, 0.15);
+        border-color: rgba(252, 129, 129, 0.35);
+        color: #fc8181;
+    }
+
+/* End call button — red, more prominent */
+#endCallBtn {
+    background: rgba(252, 70, 70, 0.2);
+    border: 1px solid rgba(252, 70, 70, 0.45);
+    color: #fc8181;
+}
+
+    #endCallBtn:hover {
+        background: rgba(252, 70, 70, 0.35);
+        border-color: rgba(252, 70, 70, 0.7);
+    }
+
+/* ── Status Bar ──────────────────────────────────────────────────────────── */
+#callStatus {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #8892a4;
+    padding: 0.4rem 1rem 0.6rem;
+    background: #111827;
+    min-height: 1.8rem;
+}

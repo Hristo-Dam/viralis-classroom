@@ -1,0 +1,3 @@
+@ECHO OFF
+ECHO Hello and welcome to batch scripting! If you’re seeing this text, it means you’ve successfully created a BAT file in Windows. Great job!
+PAUSE

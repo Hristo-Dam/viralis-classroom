@@ -565,3 +565,99 @@
         cursor: not-allowed;
         transform: none;
     }
+
+/* ─── Viralis Table ──────────────────────────────────────── */
+.viralis-table-wrap {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.viralis-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+    .viralis-table thead tr {
+        border-bottom: 1px solid var(--border);
+        background: var(--bg);
+    }
+
+    .viralis-table th {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-muted);
+    }
+
+    .viralis-table tbody tr {
+        border-bottom: 1px solid var(--border);
+        transition: background 0.15s ease;
+    }
+
+        .viralis-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .viralis-table tbody tr:hover {
+            background: rgba(79, 142, 247, 0.03);
+        }
+
+    .viralis-table td {
+        padding: 0.9rem 1.25rem;
+        color: var(--text);
+        vertical-align: middle;
+    }
+
+/* ─── Danger Button ──────────────────────────────────────── */
+.btn-danger-action {
+    background: rgba(252, 129, 129, 0.08);
+    color: #fc8181;
+    border: 1px solid rgba(252, 129, 129, 0.25);
+    border-radius: 8px;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    font-family: 'DM Sans', sans-serif;
+}
+
+    .btn-danger-action:hover {
+        background: rgba(252, 129, 129, 0.15);
+        border-color: rgba(252, 129, 129, 0.5);
+    }
+
+/* ─── Alert / Toast Banners ──────────────────────────────── */
+.viralis-alert {
+    border-radius: 12px;
+    padding: 0.85rem 1.1rem;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.viralis-alert-success {
+    background: rgba(52, 211, 153, 0.08);
+    border: 1px solid rgba(52, 211, 153, 0.25);
+    color: #2a9d72;
+}
+
+.viralis-alert-error {
+    background: rgba(252, 129, 129, 0.08);
+    border: 1px solid rgba(252, 129, 129, 0.25);
+    color: #e05252;
+}
+
+.viralis-alert-info {
+    background: rgba(79, 142, 247, 0.07);
+    border: 1px solid rgba(79, 142, 247, 0.2);
+    color: var(--accent);
+}
+

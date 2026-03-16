@@ -1,24 +1,53 @@
-﻿@model Viralis.Common.ViewModels.Classroom.CreateClassroomViewModel
+@model Viralis.Common.ViewModels.Classroom.CreateClassroomViewModel
 
 @{
     ViewData["Title"] = "Create Classroom";
 }
 
-<div class="container mt-4" style="max-width: 500px">
-    <h2>Create Classroom</h2>
-
-    <form asp-action="Create" method="post">
-        <div class="mb-3">
-            <label asp-for="Name" class="form-label"></label>
-            <input asp-for="Name" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Subject" class="form-label"></label>
-            <input asp-for="Subject" class="form-control" />
-            <span asp-validation-for="Subject" class="text-danger"></span>
-        </div>
-        <button type="submit" class="btn btn-primary w-100">Create</button>
-        <a asp-action="Index" class="btn btn-link w-100 mt-1">Cancel</a>
-    </form>
+<!-- Header Banner -->
+<div class="classroom-banner">
+    <div class="container">
+        <a asp-action="Index" style="color: var(--accent); font-size:0.875rem; text-decoration:none;">
+            ← Back to classrooms
+        </a>
+        <h1 class="classroom-banner-title" style="margin-top:0.5rem;">New Classroom</h1>
+    </div>
 </div>
+
+<div class="container" style="max-width:540px; padding: 2rem 1rem;">
+    <div class="assignment-card">
+        <form asp-action="Create" method="post">
+
+            <div asp-validation-summary="ModelOnly" class="form-error-summary"
+                 style="display:@(ViewData.ModelState.IsValid ? "none" : "block")"></div>
+
+            <div class="form-field">
+                <label asp-for="Name" class="form-label">Classroom Name</label>
+                <input asp-for="Name" class="form-input" placeholder="e.g. English Literature" />
+                <span asp-validation-for="Name" class="form-field-error"></span>
+            </div>
+
+            <div class="form-field">
+                <label asp-for="Subject" class="form-label">Subject</label>
+                <input asp-for="Subject" class="form-input" placeholder="e.g. English" />
+                <span asp-validation-for="Subject" class="form-field-error"></span>
+            </div>
+
+            <div style="display:flex; gap:1rem; margin-top:1.75rem;">
+                <button type="submit" class="btn-primary-action"
+                        style="flex:1; text-align:center; padding:0.75rem; border:none; cursor:pointer;">
+                    Create Classroom
+                </button>
+                <a asp-action="Index" class="btn-secondary-action"
+                   style="flex:1; text-align:center; padding:0.75rem;">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

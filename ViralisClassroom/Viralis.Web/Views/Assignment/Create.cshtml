@@ -1,4 +1,4 @@
-﻿@model Viralis.Common.ViewModels.Assignment.CreateAssignmentViewModel
+@model Viralis.Common.ViewModels.Assignment.CreateAssignmentViewModel
 
 @{
     ViewData["Title"] = "Create Assignment";
@@ -13,7 +13,7 @@
     <div class="container">
         <a asp-controller="Classroom" asp-action="Details"
            asp-route-id="@Model.ClassroomId"
-           style="color:#4f8ef7; font-size:0.875rem; text-decoration:none;">
+           style="color: var(--accent); font-size:0.875rem; text-decoration:none;">
             ← Back to classroom
         </a>
         <h1 class="classroom-banner-title" style="margin-top:0.5rem;">New Assignment</h1>
@@ -60,7 +60,8 @@
             </div>
 
             <div style="display:flex; gap:1rem; margin-top:1.75rem;">
-                <button type="submit" class="btn-primary-action" style="flex:1; text-align:center; padding:0.75rem; border:none; cursor:pointer;">
+                <button type="submit" class="btn-primary-action"
+                        style="flex:1; text-align:center; padding:0.75rem; border:none; cursor:pointer;">
                     Create Assignment
                 </button>
                 <a asp-controller="Classroom" asp-action="Details"

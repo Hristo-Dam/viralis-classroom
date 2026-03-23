@@ -76,6 +76,17 @@ function createFileManager(inputId, chipsId) {
         renderChips();
     };
 
+    // Before the form submits natively, sync the managed files array back to
+    // input.files so the browser sends ALL accumulated files, not just the last pick.
+    const parentForm = input.closest('form');
+    if (parentForm) {
+        parentForm.addEventListener('submit', function () {
+            const dt = new DataTransfer();
+            files.forEach(f => dt.items.add(f));
+            input.files = dt.files;
+        });
+    }
+
     // Store manager so forms can access the files array
     fileManagers[inputId] = { getFiles: () => files };
 }

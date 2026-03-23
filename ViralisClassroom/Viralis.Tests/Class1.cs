@@ -1,7 +1,2 @@
-﻿namespace Viralis.Tests
-{
-    public class Class1
-    {
+﻿// Placeholder removed - see ClassroomServiceTests.cs, AssignmentServiceTests.cs, ClassroomMemberServiceTests.cs
 
-    }
-}

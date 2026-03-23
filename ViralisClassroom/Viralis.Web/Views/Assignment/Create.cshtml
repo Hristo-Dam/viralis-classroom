@@ -22,7 +22,7 @@
 
 <div class="container" style="max-width:680px; padding: 2rem 1rem;">
     <div class="assignment-card">
-        <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <form id="createForm" asp-action="Create" method="post" enctype="multipart/form-data">
             <input type="hidden" asp-for="ClassroomId" />
 
             <div asp-validation-summary="ModelOnly" class="form-error-summary"

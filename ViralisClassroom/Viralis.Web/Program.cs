@@ -102,7 +102,21 @@ namespace Viralis.Web
                 await RoleSeeder.SeedRolesAsync(roleManager);
 
                 var adminUser = await userManager.FindByEmailAsync(UserConstants.AdminEmail);
-                if (adminUser != null && !await userManager.IsInRoleAsync(adminUser, RoleConstants.ADMIN))
+                if (adminUser == null)
+                {
+                    adminUser = new ApplicationUser
+                    {
+                        Id = UserConstants.AdminId,
+                        UserName = UserConstants.AdminUserName,
+                        NormalizedUserName = UserConstants.AdminUserName.ToUpper(),
+                        Email = UserConstants.AdminEmail,
+                        NormalizedEmail = UserConstants.AdminEmail.ToUpper(),
+                        ConcurrencyStamp = UserConstants.AdminConcurrencyStamp,
+                    };
+                    await userManager.CreateAsync(adminUser, UserConstants.DefaultPassword);
+                }
+
+                if (!await userManager.IsInRoleAsync(adminUser, RoleConstants.ADMIN))
                 {
                     await userManager.AddToRoleAsync(adminUser, RoleConstants.ADMIN);
                 }

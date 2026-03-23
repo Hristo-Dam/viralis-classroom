@@ -11,6 +11,9 @@ namespace Viralis.Web.Controllers
         {
             if (User.Identity?.IsAuthenticated == true)
             {
+                if (User.IsInRole(RoleConstants.ADMIN))
+                    return RedirectToAction("Users", "Admin");
+
                 if (User.IsInRole(RoleConstants.SCHOOL_ADMINISTRATOR))
                     return RedirectToAction("Index", "SchoolAdmin");
 

@@ -1,0 +1,37 @@
+@{
+    ViewData["Title"] = "Access denied";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="error-page">
+    <div class="error-glow error-glow-red"></div>
+    <div class="container error-content">
+
+        <div class="error-code error-code-red">403</div>
+
+        <h1 class="error-title">Access denied</h1>
+        <p class="error-subtitle">
+            You don't have permission to view this page.
+            If you believe this is a mistake, contact your teacher or school administrator.
+        </p>
+
+        <div class="error-actions">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a asp-controller="Classroom" asp-action="Index" class="btn-hero-primary">
+                    Go to my classrooms →
+                </a>
+            }
+            else
+            {
+                <a asp-area="Identity" asp-page="/Account/Login" class="btn-hero-primary">
+                    Sign in →
+                </a>
+            }
+            <a href="javascript:history.back()" class="btn-hero-secondary">
+                Go back
+            </a>
+        </div>
+
+    </div>
+</section>

@@ -1,0 +1,39 @@
+@model int?
+@{
+    ViewData["Title"] = "Something went wrong";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var code = Model.HasValue ? Model.Value.ToString() : "500";
+}
+
+<section class="error-page">
+    <div class="error-glow error-glow-yellow"></div>
+    <div class="container error-content">
+
+        <div class="error-code error-code-yellow">@code</div>
+
+        <h1 class="error-title">Something went wrong</h1>
+        <p class="error-subtitle">
+            An unexpected error occurred on our end. We've logged it and will look into it.
+            Try refreshing the page, or come back in a moment.
+        </p>
+
+        <div class="error-actions">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a asp-controller="Classroom" asp-action="Index" class="btn-hero-primary">
+                    Go to my classrooms →
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Home" asp-action="Index" class="btn-hero-primary">
+                    Back to home →
+                </a>
+            }
+            <a href="javascript:location.reload()" class="btn-hero-secondary">
+                Try again
+            </a>
+        </div>
+
+    </div>
+</section>

@@ -1,8 +1,8 @@
-﻿const classroomId = window.chatConfig.classroomId;
+const classroomId      = window.chatConfig.classroomId;
 const currentUserEmail = window.chatConfig.currentUserEmail;
-const chatMessages = document.getElementById('chatMessages');
-const chatInput = document.getElementById('chatInput');
-const chatSend = document.getElementById('chatSend');
+const chatMessages     = document.getElementById('chatMessages');
+const chatInput        = document.getElementById('chatInput');
+const chatSend         = document.getElementById('chatSend');
 
 const connection = new signalR.HubConnectionBuilder()
     .withUrl('/chatHub')
@@ -18,21 +18,30 @@ connection.on('ReceiveMessage', function (msg) {
     scrollToBottom();
 });
 
+/**
+ * Renders a flat discussion-board style message row:
+ *
+ *  [Avatar]  SenderEmail  ·  12:34
+ *            Message text here...
+ */
 function appendMessage(initial, email, content, time, isOwn) {
     const div = document.createElement('div');
-    div.className = `chat-message ${isOwn ? 'own' : ''}`;
+    div.className = `chat-message${isOwn ? ' own' : ''}`;
     div.innerHTML = `
-        ${!isOwn ? `<div class="chat-avatar">${initial}</div>` : ''}
+        <div class="chat-avatar" title="${escapeHtml(email)}">${escapeHtml(initial)}</div>
         <div class="chat-bubble-wrap">
-            ${!isOwn ? `<span class="chat-sender">${email}</span>` : ''}
+            <div class="chat-meta-row">
+                <span class="chat-sender">${isOwn ? 'You' : escapeHtml(email)}</span>
+                <span class="chat-time">${escapeHtml(time)}</span>
+            </div>
             <div class="chat-bubble">${escapeHtml(content)}</div>
-            <span class="chat-time">${time}</span>
         </div>
     `;
     chatMessages.appendChild(div);
 }
 
 function escapeHtml(text) {
+    if (typeof text !== 'string') return '';
     return text
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
@@ -50,11 +59,15 @@ async function sendMessage() {
 
     chatInput.value = '';
     chatInput.style.height = 'auto';
+    chatSend.disabled = true;
 
     try {
         await connection.invoke('SendMessage', classroomId, content);
     } catch (err) {
-        console.error('Send failed:', err);
+        console.error('[Chat] Send failed:', err);
+    } finally {
+        chatSend.disabled = false;
+        chatInput.focus();
     }
 }
 
@@ -67,12 +80,17 @@ chatInput.addEventListener('keydown', function (e) {
     }
 });
 
+// Auto-grow textarea up to 120px
 chatInput.addEventListener('input', function () {
     this.style.height = 'auto';
     this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+    chatSend.disabled = this.value.trim().length === 0;
 });
+
+// Disable send btn when empty on load
+chatSend.disabled = true;
 
 connection.start()
     .then(() => connection.invoke('JoinClassroom', classroomId))
     .then(() => scrollToBottom())
-    .catch(err => console.error('SignalR connection failed:', err));
+    .catch(err => console.error('[Chat] SignalR connection failed:', err));

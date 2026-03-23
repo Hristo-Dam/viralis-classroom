@@ -1,0 +1,161 @@
+@model IEnumerable<Viralis.Common.ViewModels.Admin.AdminUserViewModel>
+
+@{
+    ViewData["Title"] = "Admin Panel";
+    var allRoles = new[] { "Student", "Teacher", "School Administrator", "Admin" };
+}
+
+<!-- Header Banner -->
+<div class="classroom-banner">
+    <div class="container">
+        <div class="classroom-banner-content">
+            <div>
+                <p class="classroom-banner-subject">System Administration</p>
+                <h1 class="classroom-banner-title">User Management</h1>
+            </div>
+            <div style="display:flex; gap:0.5rem; align-items:center;">
+                <div class="admin-stat-pill">
+                    <span class="admin-stat-num">@ViewBag.TotalUsers</span>
+                    <span class="admin-stat-label">users shown</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" style="padding-top:2rem; padding-bottom:3rem;">
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="viralis-alert viralis-alert-success" style="margin-bottom:1.5rem;">
+            ✓ @TempData["Success"]
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="viralis-alert viralis-alert-error" style="margin-bottom:1.5rem;">
+            ⚠ @TempData["Error"]
+        </div>
+    }
+
+    <!-- Search + Filter bar -->
+    <form method="get" asp-action="Users" class="admin-filter-bar">
+        <input type="text" name="search"
+               class="form-input admin-search"
+               placeholder="Search by email..."
+               value="@ViewBag.Search" />
+
+        <select name="role" class="form-input admin-role-select" onchange="this.form.submit()">
+            <option value="All" selected="@(ViewBag.RoleFilter == null || ViewBag.RoleFilter == "All")">
+                All roles
+            </option>
+            @foreach (var role in allRoles)
+            {
+                <option value="@role" selected="@(ViewBag.RoleFilter == role)">@role</option>
+            }
+        </select>
+
+        <button type="submit" class="btn-primary-action" style="padding:0.6rem 1.25rem;">
+            Search
+        </button>
+    </form>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state" style="padding:3rem 2rem;">
+            <div class="empty-icon">🔍</div>
+            <p>No users match your search.</p>
+        </div>
+    }
+    else
+    {
+        <div class="viralis-table-wrap">
+            <table class="viralis-table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th style="text-align:right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <!-- Email + avatar -->
+                            <td>
+                                <div style="display:flex; align-items:center; gap:0.75rem;">
+                                    <div class="user-avatar" style="width:34px; height:34px; font-size:0.8rem; flex-shrink:0;">
+                                        @user.Email.Substring(0, 1).ToUpper()
+                                    </div>
+                                    <span style="font-size:0.9rem;">@user.Email</span>
+                                </div>
+                            </td>
+
+                            <!-- Current role + inline change dropdown -->
+                            <td>
+                                <form asp-action="ChangeRole" method="post"
+                                      style="display:flex; align-items:center; gap:0.5rem;">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="userId" value="@user.Id" />
+                                    <select name="newRole" class="admin-inline-select"
+                                            onchange="this.form.submit()"
+                                            title="Change role">
+                                        @foreach (var role in allRoles)
+                                        {
+                                            <option value="@role" selected="@(user.Role == role)">
+                                                @role
+                                            </option>
+                                        }
+                                    </select>
+                                </form>
+                            </td>
+
+                            <!-- Lock status -->
+                            <td>
+                                @if (user.IsLocked)
+                                {
+                                    <span class="admin-status-badge admin-status-locked">Locked</span>
+                                }
+                                else
+                                {
+                                    <span class="admin-status-badge admin-status-active">Active</span>
+                                }
+                            </td>
+
+                            <!-- Actions -->
+                            <td>
+                                <div style="display:flex; justify-content:flex-end; gap:0.5rem; align-items:center;">
+
+                                    <!-- Lock / Unlock -->
+                                    <form asp-action="ToggleLock" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="userId" value="@user.Id" />
+                                        <button type="submit"
+                                                class="@(user.IsLocked ? "admin-action-btn admin-action-unlock" : "admin-action-btn admin-action-lock")"
+                                                title="@(user.IsLocked ? "Unlock account" : "Lock account")">
+                                            @(user.IsLocked ? "🔓 Unlock" : "🔒 Lock")
+                                        </button>
+                                    </form>
+
+                                    <!-- Delete -->
+                                    <form asp-action="DeleteUser" method="post" class="d-inline"
+                                          onsubmit="return confirm('Permanently delete @user.Email? This cannot be undone.')">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="userId" value="@user.Id" />
+                                        <button type="submit" class="btn-danger-action">
+                                            Delete
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+</div>

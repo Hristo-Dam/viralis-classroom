@@ -1,0 +1,37 @@
+@{
+    ViewData["Title"] = "Page not found";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="error-page">
+    <div class="error-glow"></div>
+    <div class="container error-content">
+
+        <div class="error-code">404</div>
+
+        <h1 class="error-title">Page not found</h1>
+        <p class="error-subtitle">
+            The page you're looking for doesn't exist or may have been moved.
+            Double-check the URL or head back to somewhere familiar.
+        </p>
+
+        <div class="error-actions">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a asp-controller="Classroom" asp-action="Index" class="btn-hero-primary">
+                    Go to my classrooms →
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Home" asp-action="Index" class="btn-hero-primary">
+                    Back to home →
+                </a>
+            }
+            <a href="javascript:history.back()" class="btn-hero-secondary">
+                Go back
+            </a>
+        </div>
+
+    </div>
+</section>

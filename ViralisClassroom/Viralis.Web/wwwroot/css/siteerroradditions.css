@@ -1,0 +1,75 @@
+/* ─── Error Pages ────────────────────────────────────────── */
+/* Append these rules to the bottom of wwwroot/css/site.css  */
+
+.error-page {
+    min-height: calc(100vh - 65px);
+    background: var(--nav-bg);
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.error-glow {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(79,142,247,0.12) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.error-glow-red {
+    background: radial-gradient(circle, rgba(252,129,129,0.1) 0%, transparent 70%);
+}
+
+.error-glow-yellow {
+    background: radial-gradient(circle, rgba(251,191,36,0.1) 0%, transparent 70%);
+}
+
+.error-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 5rem 1rem;
+}
+
+.error-code {
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(6rem, 15vw, 10rem);
+    font-weight: 800;
+    color: rgba(79,142,247,0.18);
+    letter-spacing: -4px;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    user-select: none;
+}
+
+.error-code-red    { color: rgba(252,129,129,0.18); }
+.error-code-yellow { color: rgba(251,191,36,0.18); }
+
+.error-title {
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    margin-bottom: 1rem;
+}
+
+.error-subtitle {
+    font-size: 1.05rem;
+    color: var(--nav-muted);
+    max-width: 460px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+}
+
+.error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}

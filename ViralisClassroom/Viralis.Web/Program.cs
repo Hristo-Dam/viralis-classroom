@@ -120,6 +120,9 @@ namespace Viralis.Web
                 {
                     await userManager.AddToRoleAsync(adminUser, RoleConstants.ADMIN);
                 }
+
+                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                await DemoSeeder.SeedAsync(userManager, db);
             }
 
             app.Run();

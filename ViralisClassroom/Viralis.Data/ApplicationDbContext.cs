@@ -13,7 +13,6 @@ namespace Viralis.Data
             : base(options)
         {
         }
-        // DbSets
         public DbSet<Classroom> Classrooms { get; set; }
         public DbSet<ClassroomStudent> ClassroomStudents { get; set; }
         public DbSet<ClassroomTeacher> ClassroomTeachers { get; set; }

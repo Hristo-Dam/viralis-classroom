@@ -9,6 +9,7 @@ using Viralis.Services.Implementations;
 using Viralis.Services.Interfaces.Assignments;
 using Viralis.Services.Interfaces.Classroom;
 using Viralis.Web.Hubs;
+using Viralis.Web.Validators;
 
 namespace Viralis.Web
 {
@@ -37,14 +38,15 @@ namespace Viralis.Web
                 options.SignIn.RequireConfirmedAccount = false;
                 options.SignIn.RequireConfirmedEmail = false;
 
-                options.Password.RequireDigit = false;
-                options.Password.RequireLowercase = false;
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 6;
-                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireNonAlphanumeric = true;
             })
             .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders()
+            .AddPasswordValidator<NoSpacesPasswordValidator>();
 
             builder.Services.AddRazorPages();
             builder.Services.AddControllersWithViews();
@@ -61,7 +63,7 @@ namespace Viralis.Web
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                app.UseExceptionHandler("/Error/Index");
                 app.UseHsts();  // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             }
 

@@ -56,7 +56,7 @@ namespace Viralis.Web.Hubs
             {
                 id = message.Id,
                 senderEmail = user.Email,
-                senderInitial = user.Email!.Substring(0, 1).ToUpper(),
+                senderInitial = user.Email![..1].ToUpper(),
                 content = message.Content,
                 sentAt = message.SentAt.ToString("HH:mm"),
                 isOwn = false
@@ -87,7 +87,7 @@ namespace Viralis.Web.Hubs
             {
                 callerId = userIdStr,
                 callerEmail = user.Email,
-                callerInitial = user.Email!.Substring(0, 1).ToUpper()
+                callerInitial = user.Email![..1].ToUpper()
             });
         }
 

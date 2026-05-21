@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Viralis.Common.Constants;
 using Viralis.Common.ViewModels.Assignment;
 using Viralis.Services.Interfaces.Assignments;
 
@@ -15,14 +16,14 @@ namespace Viralis.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Teacher")]
+        [Authorize(Roles = RoleConstants.TEACHER)]
         public IActionResult Create(Guid classroomId)
         {
             return View(new CreateAssignmentViewModel { ClassroomId = classroomId });
         }
 
         [HttpPost]
-        [Authorize(Roles = "Teacher")]
+        [Authorize(Roles = RoleConstants.TEACHER)]
         public async Task<IActionResult> Create(CreateAssignmentViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -36,7 +37,7 @@ namespace Viralis.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(Guid id, Guid classroomId)
         {
-            bool isTeacher = User.IsInRole("Teacher");
+            bool isTeacher = User.IsInRole(RoleConstants.TEACHER);
             var model = await _assignmentService.GetDetailAsync(id, CurrentUserId, isTeacher);
 
             if (model == null) return Forbid();
@@ -45,7 +46,7 @@ namespace Viralis.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Student")]
+        [Authorize(Roles = RoleConstants.STUDENT)]
         public async Task<IActionResult> Submit(SubmitAssignmentViewModel model)
         {
             try
@@ -63,7 +64,7 @@ namespace Viralis.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Teacher")]
+        [Authorize(Roles = RoleConstants.TEACHER)]
         public async Task<IActionResult> Grade(GradeSubmissionViewModel model)
         {
             try
@@ -81,7 +82,7 @@ namespace Viralis.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Student")]
+        [Authorize(Roles = RoleConstants.STUDENT)]
         public async Task<IActionResult> EditSubmission(SubmitAssignmentViewModel model)
         {
             try

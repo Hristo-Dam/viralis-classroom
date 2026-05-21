@@ -34,8 +34,9 @@
             <div class="form-field">
                 <label asp-for="TemporaryPassword" class="form-label">Temporary Password</label>
                 <input asp-for="TemporaryPassword" type="password" class="form-input"
-                       placeholder="Min. 8 characters" />
+                       placeholder="At least 6 characters" />
                 <span asp-validation-for="TemporaryPassword" class="form-field-error"></span>
+                <small class="field-hint">At least 6 characters · one letter · one number · one special character · no spaces</small>
             </div>
 
             <div style="display:flex; gap:1rem; margin-top:1.75rem;">

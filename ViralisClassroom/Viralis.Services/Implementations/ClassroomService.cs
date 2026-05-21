@@ -179,7 +179,7 @@ namespace Viralis.Services.Implementations
                     {
                         Id = m.Id,
                         SenderEmail = m.Sender.Email!,
-                        SenderInitial = m.Sender.Email!.Substring(0, 1).ToUpper(),
+                        SenderInitial = m.Sender.Email![..1].ToUpper(),
                         Content = m.Content,
                         SentAt = m.SentAt.ToString("HH:mm"),
                         IsOwn = m.SenderId == userId

@@ -29,6 +29,55 @@ namespace Viralis.Data.Seeding
             await EnsureClassroom(db, UserConstants.Classroom3Id, "Demo Classroom 3", "History", "JOIN03", teacher, student3);
 
             await db.SaveChangesAsync();
+
+            await SeedAppUsersAsync(userManager, db);
+        }
+
+        private static async Task SeedAppUsersAsync(UserManager<ApplicationUser> userManager, ApplicationDbContext db)
+        {
+            var teacher1 = await EnsureUser(userManager, UserConstants.AppTeacher1Email, UserConstants.AppTeacher1UserName, UserConstants.AppTeacher1ConcurrencyStamp);
+            var teacher2 = await EnsureUser(userManager, UserConstants.AppTeacher2Email, UserConstants.AppTeacher2UserName, UserConstants.AppTeacher2ConcurrencyStamp);
+            var student1 = await EnsureUser(userManager, UserConstants.AppStudent1Email, UserConstants.AppStudent1UserName, UserConstants.AppStudent1ConcurrencyStamp);
+            var student2 = await EnsureUser(userManager, UserConstants.AppStudent2Email, UserConstants.AppStudent2UserName, UserConstants.AppStudent2ConcurrencyStamp);
+            var student3 = await EnsureUser(userManager, UserConstants.AppStudent3Email, UserConstants.AppStudent3UserName, UserConstants.AppStudent3ConcurrencyStamp);
+            var student4 = await EnsureUser(userManager, UserConstants.AppStudent4Email, UserConstants.AppStudent4UserName, UserConstants.AppStudent4ConcurrencyStamp);
+            var student5 = await EnsureUser(userManager, UserConstants.AppStudent5Email, UserConstants.AppStudent5UserName, UserConstants.AppStudent5ConcurrencyStamp);
+            var schoolAdmin1 = await EnsureUser(userManager, UserConstants.AppSchoolAdmin1Email, UserConstants.AppSchoolAdmin1UserName, UserConstants.AppSchoolAdmin1ConcurrencyStamp);
+
+            await EnsureRole(userManager, teacher1, RoleConstants.TEACHER);
+            await EnsureRole(userManager, teacher2, RoleConstants.TEACHER);
+            await EnsureRole(userManager, student1, RoleConstants.STUDENT);
+            await EnsureRole(userManager, student2, RoleConstants.STUDENT);
+            await EnsureRole(userManager, student3, RoleConstants.STUDENT);
+            await EnsureRole(userManager, student4, RoleConstants.STUDENT);
+            await EnsureRole(userManager, student5, RoleConstants.STUDENT);
+            await EnsureRole(userManager, schoolAdmin1, RoleConstants.SCHOOL_ADMINISTRATOR);
+
+            bool schoolExists = await db.SchoolAdministrators.AnyAsync(s => s.Id == UserConstants.AppSchoolId);
+            if (!schoolExists)
+            {
+                db.SchoolAdministrators.Add(new SchoolAdministrator
+                {
+                    Id = UserConstants.AppSchoolId,
+                    Name = "App Demo School",
+                    SchoolAdminId = schoolAdmin1.Id,
+                    Teachers = new List<ApplicationUser> { teacher1, teacher2 }
+                });
+            }
+
+            // Algebra II  — teacher1; students 1, 2, 3
+            await EnsureClassroomWithStudents(db, UserConstants.AppClassroom1Id, "Algebra II", "Mathematics", "JOIN11",
+                teacher1, student1, student2, student3);
+
+            // World History — teacher1; students 2, 4, 5  (student2 is in two classrooms)
+            await EnsureClassroomWithStudents(db, UserConstants.AppClassroom2Id, "World History", "History", "JOIN12",
+                teacher1, student2, student4, student5);
+
+            // Biology — teacher2; students 1, 3, 4, 5
+            await EnsureClassroomWithStudents(db, UserConstants.AppClassroom3Id, "Biology", "Science", "JOIN13",
+                teacher2, student1, student3, student4, student5);
+
+            await db.SaveChangesAsync();
         }
 
         private static async Task<ApplicationUser> EnsureUser(
@@ -104,6 +153,34 @@ namespace Viralis.Data.Seeding
                 {
                     new ClassroomStudent { StudentId = student.Id, ClassroomId = classroomId }
                 }
+            });
+        }
+
+        private static async Task EnsureClassroomWithStudents(
+            ApplicationDbContext db,
+            Guid classroomId,
+            string name,
+            string subject,
+            string joinCode,
+            ApplicationUser teacher,
+            params ApplicationUser[] students)
+        {
+            bool classroomExists = await db.Classrooms.AnyAsync(c => c.Id == classroomId);
+            if (classroomExists) return;
+
+            db.Classrooms.Add(new Classroom
+            {
+                Id = classroomId,
+                Name = name,
+                Subject = subject,
+                JoinCode = joinCode,
+                Teachers = new List<ClassroomTeacher>
+                {
+                    new ClassroomTeacher { TeacherId = teacher.Id, ClassroomId = classroomId, IsOwner = true }
+                },
+                Students = students
+                    .Select(s => new ClassroomStudent { StudentId = s.Id, ClassroomId = classroomId })
+                    .ToList()
             });
         }
     }

@@ -20,14 +20,14 @@
             <div>
                 <h1 class="classroom-banner-title">@Model.Title</h1>
                 <p style="color: @(Model.IsOverdue ? "var(--color-overdue, #fc8181)" : "var(--text-muted)"); margin:0.3rem 0 0; font-size:0.875rem;">
-                    Due @Model.DueDate.ToString("MMM dd, yyyy 'at' HH:mm")
+                    Due @Model.DueDate.ToString("dd/MM/yyyy HH:mm")
                     @if (Model.IsOverdue)
                     {
                         <span> · Overdue</span>
                     }
                 </p>
                 <p style="color: var(--text-muted); margin:0.2rem 0 0; font-size:0.8rem;">
-                    Posted @Model.AssignmentDate.ToString("MMM dd, yyyy 'at' HH:mm")
+                    Posted @Model.AssignmentDate.ToString("dd/MM/yyyy HH:mm")
                 </p>
             </div>
         </div>
@@ -93,7 +93,7 @@
                                     <div class="submission-info">
                                         <span class="submission-email">@sub.StudentEmail</span>
                                         <span class="submission-status @(sub.HasSubmitted ? "status-submitted" : "status-missing")">
-                                            @(sub.HasSubmitted ? $"Submitted {sub.SubmittedOn?.ToString("MMM dd")}" : "Missing")
+                                            @(sub.HasSubmitted ? $"Submitted {sub.SubmittedOn?.ToString("dd/MM/yyyy")}" : "Missing")
                                         </span>
                                         @if (sub.TextContent != null)
                                         {
@@ -168,7 +168,7 @@
                     {
                         <h4 class="submission-panel-title">Your Submission</h4>
                         <div class="submission-meta">
-                            Submitted @Model.MySubmission.SubmittedOn.ToString("MMM dd 'at' HH:mm")
+                            Submitted @Model.MySubmission.SubmittedOn.ToString("dd/MM/yyyy HH:mm")
                         </div>
 
                         @if (Model.MySubmission.TextContent != null)

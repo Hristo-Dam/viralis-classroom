@@ -101,8 +101,8 @@
                                         <p class="stream-card-type">Assignment</p>
                                         <p class="stream-card-title">@assignment.Title</p>
                                         <p class="stream-card-meta">
-                                            Posted @assignment.AssignmentDate.ToString("MMM dd, yyyy 'at' HH:mm")
-                                            · Due @assignment.DueDate.ToString("MMM dd, yyyy")
+                                            Posted @assignment.AssignmentDate.ToString("dd/MM/yyyy HH:mm")
+                                            · Due @assignment.DueDate.ToString("dd/MM/yyyy")
                                             @if (assignment.IsOverdue)
                                             {
                                                 <span class="stream-overdue"> · Overdue</span>
@@ -167,7 +167,7 @@
                                 <div class="alc-icon">📋</div>
                                 <div>
                                     <p class="alc-title">@a.Title</p>
-                                    <p class="alc-due">Due @a.DueDate.ToString("MMM dd, yyyy")</p>
+                                    <p class="alc-due">Due @a.DueDate.ToString("dd/MM/yyyy")</p>
                                 </div>
                             </div>
                             <div class="alc-right">

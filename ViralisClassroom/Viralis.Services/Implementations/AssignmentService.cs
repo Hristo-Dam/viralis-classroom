@@ -168,10 +168,6 @@ namespace Viralis.Services.Implementations
 
         public async Task SubmitAsync(SubmitAssignmentViewModel model, Guid studentId)
         {
-            var fileCount = model.Files?.Count ?? 0;
-            Console.WriteLine($"Files received: {fileCount}");
-            Console.WriteLine($"TextContent: '{model.TextContent}'");
-
             bool hasComment = !string.IsNullOrWhiteSpace(model.TextContent);
             bool hasFiles = model.Files != null && model.Files.Any(f => f.Length > 0);
 
@@ -196,9 +192,6 @@ namespace Viralis.Services.Implementations
 
             if (alreadySubmitted)
                 throw new InvalidOperationException("You have already submitted this assignment.");
-
-            //if (ua.Submission != null)
-            //    throw new InvalidOperationException("Already submitted.");
 
             var submission = new Submission
             {

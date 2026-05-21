@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"D:\\\\Programing\\\\viralis-classroom\" -Directory)",
+      "Bash(Select-Object Name)",
+      "Bash(dotnet build *)",
+      "PowerShell(Rename-Item \"D:\\\\Programing\\\\viralis-classroom\\\\ViralisClassroom\\\\Viralis.Web\\\\Views\\\\Error\\\\Error_Forbidden.cshtml\" \"Forbidden.cshtml\")",
+      "PowerShell(Rename-Item \"D:\\\\Programing\\\\viralis-classroom\\\\ViralisClassroom\\\\Viralis.Web\\\\Views\\\\Error\\\\Error_Index.cshtml\" \"Index.cshtml\")",
+      "Bash(git pull *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)"
+    ]
+  }
+}

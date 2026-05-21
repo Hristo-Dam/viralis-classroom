@@ -90,7 +90,7 @@ namespace Viralis.Web.Controllers
             }
             else
             {
-                await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow.AddYears(100));
+                await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
                 TempData["Success"] = $"{user.Email} has been locked.";
             }
 

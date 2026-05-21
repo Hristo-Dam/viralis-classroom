@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Viralis.Common.Constants;
 using Viralis.Common.ViewModels.Classroom;
 using Viralis.Services.Interfaces.Classroom;
 
@@ -24,14 +25,14 @@ namespace Viralis.Web.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "Teacher")]
+        [Authorize(Roles = RoleConstants.TEACHER)]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Teacher")]
+        [Authorize(Roles = RoleConstants.TEACHER)]
         public async Task<IActionResult> Create(CreateClassroomViewModel model)
         {
             if (!ModelState.IsValid)
